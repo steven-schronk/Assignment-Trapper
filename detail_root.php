@@ -254,12 +254,22 @@ if($_GET["user"] == '' ) {
 
 	}
 
-	$comment_form = '<div class="comment_box">Add Comment:<form action="comment.php" method="get">
-	<textarea name="comment" id="comment" cols="85" rows="6"></textarea><br><br>
-	<input name="sched" type="hidden" value='.$_GET["sched"].'>
-	<input name="user" type="hidden" value='.$_GET["user"].'>
-	<input type="submit" value="Add Comment" />
-	</form></div>';
+	if($role != 0) {
+		$comment_form = '<div class="comment_box">Add Comment:<form action="comment.php" method="get">
+			<textarea name="comment" id="comment" cols="85" rows="6"></textarea><br><br>
+			<input name="sched" type="hidden" value='.$_GET["sched"].'>
+			<input name="user" type="hidden" value='.$_GET["user"].'>
+			<input type="submit" value="Add Comment" />
+			</form></div>';
+	} else { // returns root user back to same page after a post - otherwise would return to list of students
+		$comment_form = '<div class="comment_box">Add Comment:<form action="comment.php" method="get">
+			<textarea name="comment" id="comment" cols="85" rows="6"></textarea><br><br>
+			<input name="sched" type="hidden" value='.$_GET["sched"].'>
+			<input name="user" type="hidden" value='.$_GET["user"].'>
+			<input name="action" type="hidden" value="ret">
+			<input type="submit" value="Add Comment" />
+			</form></div>';
+	}
 }
 
 /* if root user get student name for this assignment to put on page */

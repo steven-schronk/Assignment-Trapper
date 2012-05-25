@@ -31,8 +31,10 @@ function absHumanTiming($time)
 		$time = ($time - $now_date); // number of seconds into the future
 		$time = $now_date - $time;   // subtract difference from current time
 		$out .= humanTiming($time)." left";
-	} else {
+	} else if ($now_date > $time) {
 		$out .= humanTiming($time)." ago";
+	} else {
+		$out = "Just Now";
 	}
 	return $out;
 }
@@ -53,11 +55,9 @@ function tab2space($text, $spaces = 4)
             $tab = str_repeat(' ', $spaces - $tab_pos % $spaces);
             $end = substr($line, $tab_pos + 1);
             $line = $start . $tab . $end;
-        }
-        
+        }   
         $result[] = $line;
     }
-    
     return implode("\n", $result);
 }
 
