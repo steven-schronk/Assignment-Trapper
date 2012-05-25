@@ -210,10 +210,9 @@ if($_GET["user"] == '' ) {
 				</div>
 			</div>
 		</div><br><br>';
-	}
+		}
 
 	}
-
 
 	/* get comments for this assignment */
 	$sql = 'select comment_id, stdusers.name, sub_id, fac_id, facusers.name as facname, txt, timeposted, comments.role from users stdusers, comments LEFT JOIN users facusers on (facusers.user_id = comments.fac_id) where (stdusers.user_id = comments.user_id) and comments.user_id='.$_GET["user"].' and sub_id='.$_GET["sched"].' order by timeposted';
@@ -293,15 +292,25 @@ $result = mysql_query($sql);
 
 $row = mysql_fetch_row($result);
 
-if($row[0] == 1) { 
-	$upload_form = '<div class="comment_box">Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
+if($row[0] == 1) { // assignment is open
+	if($role == 0 && $_GET["user"] == 1) {
+		$upload_form = '<div class="comment_box">Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
+		<input type="file" name="file" size="40"><br><br>
+		<input name="user" type="hidden" value='.$_GET["user"].'>
+		<input name="action" type="hidden" value="ret">
+		<input type="submit" name="submit" value="Submit"/>
+		</form></div>';
+	} else if($role != 0) {
+		$upload_form = '<div class="comment_box">Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
 		<input type="file" name="file" size="40"><br><br>
 		<input type="submit" name="submit" value="Submit"/>
 		</form></div>';
-} else {
+	} else {
+		$upload_form = '';
+	}
+} else { // assignment is closed
 	$upload_form = '';
 }
-
 
 /* generate next and back buttons */
 
