@@ -67,11 +67,11 @@ $result = mysql_query($sql);
 
 if (!$result) { die("SQL ERROR: File List"); }
 
-// store these file_id in an array
 $i = 0;
 
 while($row = mysql_fetch_row($result))
 {
+	// get file contents for each file
 	$sql = 'select file_id, time_post, file_name, file_size, time_post, file_1 from files where file_id ='.$row[1];
 
 	//echo $sql;
@@ -116,61 +116,7 @@ while($row = mysql_fetch_row($result))
 	}
 }
 
-/*
-	/* get latest versions of each file for this assignment
-
-	//$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$_GET["user"].' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
-
-	$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$user_id.' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
-
-	//echo $sql;
-
-	$result = mysql_query($sql);
-
-	if (!$result) { die("SQL ERROR: Get File"); }
-
-	while($row = mysql_fetch_row($result))
-	{
-		$code = $row[5];
-		/* escape open and close symbols <> 
-		$code = str_replace("<", "&lt;", $code);
-		$code = str_replace(">", "&gt;", $code);
-
-		/* add line numbers to code 
-		$lines = explode("\n", $code);
-
-		$i = 1; $code = "";
-		foreach($lines AS $line)
-		{
-			$code .= "\n".$i."|";
-			$code .= $line;
-			$i++;
-		}
-
-		$files .= '<div class="file">
-			<div class="file_head"><img src="gfx/page_white_gear.png">
-				<span class="fname">'.$row[2].'</span>
-				<span class="fsize">'.$row[3].'B</span>
-				<span class="fdate">'.$row[4].'</span>
-				<span class="fraw"><button>Raw</button></span>
-			</div>
-			<div class="highlight">
-				<pre class="sh_cpp">
-	'.$code.'
-
-				</pre>
-			</div>
-		</div>';
-	}
-
-}
-
-*/
-
 /* get comments for this assignment */
-
-//$sql = 'select comment_id, name, sub_id, txt, timeposted, comments.role from comments, users where (users.user_id = comments.user_id) and comments.user_id='.$user_id.' and sub_id='.$_GET["sched"].' order by timeposted';
-
 $sql = 'select comment_id, stdusers.name, sub_id, fac_id, facusers.name as facname, txt, timeposted, comments.role from users stdusers,comments LEFT JOIN users facusers on (facusers.user_id = comments.fac_id) where (stdusers.user_id = comments.user_id) and comments.user_id='.$user_id.' and sub_id='.$_GET["sched"].' order by timeposted';
 
 //echo $sql;

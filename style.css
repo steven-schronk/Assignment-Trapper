@@ -1,3 +1,12 @@
+/*
+
+red    = #ffb2d2 code
+blue   = #c5bcff comments
+yellow = #ffefb2 faculty
+green  = #deffb2 students
+
+*/
+
 body {
 	padding: 10px;
 	margin: 10px;
@@ -33,13 +42,14 @@ table.gridtable td {
 .line_numbers{background-color:#ececec;color:#aaa;padding:1em .5em;border-right:1px solid #ddd;text-align:right;}
 
 /* .file {border:1px solid #ddd; } */
-.file_head {  padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: ccffc1; }
+.file_head {  padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #ffb2d2; }
 
 /*.comment {border:1px solid #ddd; width: 95%; margin-left: 10px; margin-right: 10px;}*/
 .com_body { padding-left: 15px; }
 /*.com_date_human { position: relative; left: 100px; top: -8px; color: #888;}*/
 .com_name { position: absolute; left: 100px; padding-top: 7px;  }
-.com_head { padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #c1d5ff; }
+.com_head     { padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #deffb2; }
+.com_head_fac { padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #ffefb2; }
 .com_date { position: absolute; left: 500px; padding-top: 7px; }
 .com_human { position: absolute; left: 300px; padding-top: 7px;  }
 
@@ -111,23 +121,42 @@ table.gridtable td {
 	width: 40px;
 }
 
-.line_comment {
+.line_comment_stu {
 	border-top: 1px solid #000;
 	display: none;
 	padding-left: 40px;
 	padding-top: 8px;
 	padding-bottom: 5px;
 	color: #1782b8;
-	background-color: #ddd;
+	background-color: #deffb2;
 }
 
-.line_comment_display {
+.line_comment_fac {
+	border-top: 1px solid #000;
+	display: none;
+	padding-left: 40px;
+	padding-top: 8px;
+	padding-bottom: 5px;
+	color: #1782b8;
+	background-color: #ffefb2;
+}
+
+.line_comment_display_fac {
 	border-top: 1px solid #000;
 	padding-left: 40px;
 	padding-top: 8px;
 	padding-bottom: 5px;
 	color: #1782b8;
-	background-color: #ddd;
+	background-color: #ffefb2;
+}
+
+.line_comment_display_stu {
+	border-top: 1px solid #000;
+	padding-left: 40px;
+	padding-top: 8px;
+	padding-bottom: 5px;
+	color: #1782b8;
+	background-color: #deffb2;
 }
 
 .line_comment_name {

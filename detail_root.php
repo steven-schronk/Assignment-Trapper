@@ -5,7 +5,7 @@ include_once("time.php");
 
 //if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
 
- // prevents students from seeing other's work
+// prevents students from seeing other's work
 if($role != 0) { $_GET["user"] = $user_id; }
 
 if (!$_GET["sched"]) { die("No Assignment Requested"); }
@@ -84,7 +84,7 @@ if($_GET["user"] == '' ) {
 		<th>Role</th><th>Name</th><th>Email</th><th>Grade</th>
 	</tr>';
 
-	while($row = mysql_fetch_array($result))
+	while($row = mysql_fetch_array($result)) // getting list of students
 	{
 		$student_list .= '<tr><td>';
 		if($row['role'] == 0) { $student_list .= '<img src="gfx/user_suit.png">'; } else { $student_list .=  '<img src="gfx/user_green.png">'; }
@@ -93,9 +93,13 @@ if($_GET["user"] == '' ) {
 
 	$student_list .= '</table>';
 } else {
+	/* get latest versions of each file for this assignment ---------------------------------------------------------------------*/
 
-	/* get latest versions of each file for this assignment */
-	$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$_GET["user"].' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
+	// determine if we are logged in as root and if user ID has been sent...
+	if($_GET["user"] && $role == 0 ) { $this_user = $_GET["user"]; } else { $this_user = $user_id; }
+
+	// first get list of file_ids that are distinct names and the latest versions
+	$sql = 'select distinct file_name, max(file_id) from files where user_id='.$this_user.' and sched_id='.$_GET["sched"].' group by file_name order by file_name';
 
 	//echo $sql;
 
@@ -103,20 +107,14 @@ if($_GET["user"] == '' ) {
 
 	if (!$result) { die("SQL ERROR: File List"); }
 
-	while($row = mysql_fetch_row($result))
+	$i = 0;
+
+	while($row = mysql_fetch_row($result)) // moving through list of files for this user and assignment
 	{
-		/* get latest versions of each file for this assignment */
-
-		$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$_GET["user"].' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
-
-		//$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$user_id.' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
-
-	//echo $sql;
-
 
 		// get all comments for this particular file
 		//$sql = "select filecom_id, file_id, line_no, user_id, txt, timeposted from filecom where file_id=".$row[0]." order by line_no, timeposted";
-		$sql = 'select line_no, filecom.user_id, name,  timeposted, txt from filecom, users where (users.user_id = filecom.user_id) and file_id='.$row[0].' order by line_no, timeposted';
+		$sql = 'select line_no, filecom.user_id, name,  timeposted, txt, role from filecom, users where (users.user_id = filecom.user_id) and file_id='.$row[1].' order by line_no, timeposted';
 
 		//echo $sql;
 
@@ -127,86 +125,92 @@ if($_GET["user"] == '' ) {
 		$filecoms = mysql_fetch_array($filecom);
 
 		$code = $row[5];
-		/* escape open and close symbols <> */
-		/*
-			< = &lt;
-			> = &gt;
-			/ = &#47;  	
-			] = &#93;
-			[ = &#91;
-			" = &#34;
-			' = &#39;
-	*/
 
-		//$code = str_replace("<", "&lt;", $code);
-		//$code = str_replace(">", "&gt;", $code);
-		//$code = str_replace("\t", "TAB", $code);
+		// get file contents and details for each file
+		$sql = 'select file_id, time_post, file_name, file_size, time_post, file_1 from files where file_id ='.$row[1];
 
-		$code = htmlspecialchars($code);
+		//echo $sql;
 
-		/* add line numbers to code */
-		$lines = explode("\n", $code);
-
-		// lines of code in file
-		$i = 1; $code = "";
-		foreach($lines AS $line)
+		$result2 = mysql_query($sql);
+		if (!$result2) { die("SQL ERROR: File Details"); }
+		while($row2 = mysql_fetch_array($result2)) // moving through contents of each specific file
 		{
-			// we only get line comments as they are needed
-			if($filecoms['line_no'] == $i) { // comment exists for this line
+			//echo $sql;
 
-				do {
-					// run through comment rows for this line for display
-					$code .= "<div class=line_comment_display>";
-					$code .= "<img src='gfx/down_arrow.png'>";
-					$code .= "<span class=line_comment_txt>".$filecoms['txt']."</span>";
-					$code .= "<span class=line_comment_name>".$filecoms['name']."</span>";
-					$code .= "<span class=line_comment_time>".absHumanTiming($filecoms['timeposted'])."</span>";
-					$code .= "</div>";
+			//echo $row2['file_name'];
+			$code = $row2['file_1'];
+			$code = htmlspecialchars($code);
+		
+			/* add line numbers to code */
+			$lines = explode("\n", $code);
 
-					$filecoms = mysql_fetch_array($filecom); // get next line comment
+			$i = 1; $code = "";
+			foreach($lines AS $line) // moving through each line of code in file
+			{
+				if($role == 0) { $comm_class = "line_comment_fac"; } else { $comm_class = "line_comment_stu"; }
+				// we only get line comments as they are needed
+				if($filecoms['line_no'] == $i) { // comment exists for this line
 
-				} while ($filecoms['line_no'] == $i);
+					do {
+						// run through comment rows for this line for display
+						if($filecoms['role'] == 0) {
+							$code .= "<div class=line_comment_display_fac>";
+						} else {
+							$code .= "<div class=line_comment_display_stu>";
+						}		
+						$code .= "<img src='gfx/down_arrow.png'>";
+						$code .= "<span class=line_comment_txt>".$filecoms['txt']."</span>";
+						$code .= "<span class=line_comment_name>".$filecoms['name']."</span>";
+						$code .= "<span class=line_comment_time>".absHumanTiming($filecoms['timeposted'])."</span>";
+						$code .= "</div>";
 
-				$code .= "<div id='line_com_".$row[0]."_".$i."' class='line_comment'>";
-				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$row[0]."_".$i."' type=text size=100>&nbsp;&nbsp;";
-				$code .= "<button onClick='line_comment_save(".$row[0].", ".$i.", \"line_com_".$row[0]."_".$i."\",\"line_com_val_".$row[0]."_".$i."\");'>Save</button>&nbsp;&nbsp;";
-				$code .= "<button onClick='line_comment_cancel(\"line_com_".$row[0]."_".$i."\");'>Cancel</button></div>";
-			} else { // no comment for this line
-				$code .= "<div id='line_com_".$row[0]."_".$i."' class='line_comment'>";
-				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$row[0]."_".$i."' type=text size=100>&nbsp;&nbsp;";
-				$code .= "<button onClick='line_comment_save(".$row[0].", ".$i.", \"line_com_".$row[0]."_".$i."\",\"line_com_val_".$row[0]."_".$i."\");'>Save</button>&nbsp;&nbsp;";
-				$code .= "<button onClick='line_comment_cancel(\"line_com_".$row[0]."_".$i."\");'>Cancel</button></div>";			
+						$filecoms = mysql_fetch_array($filecom); // get next line comment
+
+					} while ($filecoms['line_no'] == $i);
+
+					
+
+					$code .= "<div id='line_com_".$row2['file_id']."_".$i."' class='".$comm_class."'>";
+					$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$row2['file_id']."_".$i."' type=text size=100>&nbsp;&nbsp;";
+					$code .= "<button onClick='line_comment_save(".$row2['file_id'].", ".$i.", \"line_com_".$row2['file_id']."_".$i."\",\"line_com_val_".$row2['file_id']."_".$i."\");'>Save</button>&nbsp;&nbsp;";
+					$code .= "<button onClick='line_comment_cancel(\"line_com_".$row2['file_id']."_".$i."\");'>Cancel</button></div>";
+				} else { // no comment for this line
+					$code .= "<div id='line_com_".$row2['file_id']."_".$i."' class='".$comm_class."'>";
+					$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$row2['file_id']."_".$i."' type=text size=100>&nbsp;&nbsp;";
+					$code .= "<button onClick='line_comment_save(".$row2['file_id'].", ".$i.", \"line_com_".$row2['file_id']."_".$i."\",\"line_com_val_".$row2['file_id']."_".$i."\");'>Save</button>&nbsp;&nbsp;";
+					$code .= "<button onClick='line_comment_cancel(\"line_com_".$row2['file_id']."_".$i."\");'>Cancel</button></div>";			
+				}
+
+				$code .= "<div id='line' onClick='line_comment(\"line_com_".$row2['file_id']."_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
+				if($line == '') { $code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";
+				} else {          $code .= "<pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
+				$i++;
 			}
-
-			$code .= "<div id='line' onClick='line_comment(\"line_com_".$row[0]."_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
-			if($line == '') { $code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";
-			} else {          $code .= "<pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
-			$i++;
-		}
+		
 
 		// header for file
 		$files .= '<div class="file">
 			<div class="file_head"><img src="gfx/page_white_gear.png">
-				<span class="fname">'.$row[2].'</span>
-				<span class="fsize">'.$row[3].'B</span>
-				<span class="fdate">'.$row[4].'</span>
-				<span class="fhuman">'.absHumanTiming($row[4]).'</span>
+				<span class="fname">'.$row2['file_name'].'</span>
+				<span class="fsize">'.$row2['file_size'].'B</span>
+				<span class="fdate">'.$row2['time_post'].'</span>
+				<span class="fhuman">'.absHumanTiming($row2['time_post']).'</span>
 				<!-- <span class="fedit"><button>Edit</button></span>
 				<span class="fraw"><button>Raw</button></span>-->
 			</div>
 			<div class="highlight">
 				<div>
-	'.$code.'
+'.$code.'
 
 				</div>
 			</div>
 		</div><br><br>';
 	}
 
+	}
+
+
 	/* get comments for this assignment */
-
-	//$sql = 'select comment_id, name, sub_id, txt, timeposted, comments.role from comments, users where (users.user_id = comments.user_id) and comments.user_id='.$_GET["user"].' and sub_id='.$_GET["sched"].' order by timeposted';
-
 	$sql = 'select comment_id, stdusers.name, sub_id, fac_id, facusers.name as facname, txt, timeposted, comments.role from users stdusers,comments LEFT JOIN users facusers on (facusers.user_id = comments.fac_id) where (stdusers.user_id = comments.user_id) and comments.user_id='.$_GET["user"].' and sub_id='.$_GET["sched"].' order by timeposted';
 
 	//echo $sql;
@@ -218,22 +222,26 @@ if($_GET["user"] == '' ) {
 	while($row = mysql_fetch_array($result))
 	{
 
-	$comm .= '<div class="comment"><div class="com_head">';
+		if($row['role'] != 0) {
+			$comm .= '<div class="comment"><div class="com_head">';
+		} else {
+			$comm .= '<div class="comment"><div class="com_head_fac">';
+		}
 	
-	if($row['facname']) { $comm .= '<img src="gfx/user_suit.png">'; } else { $comm .= '<img src="gfx/user_green.png">'; }
+		if($row['facname']) { $comm .= '<img src="gfx/user_suit.png">'; } else { $comm .= '<img src="gfx/user_green.png">'; }
 	
-	if(!$row['facname']) { 
-		$comm .= '<span class="com_name">'.$row['name'].'</span>';
-	} else {
-		$comm .= '<span class="com_name">'.$row['facname'].'</span>';
-	}
+		if(!$row['facname']) { 
+			$comm .= '<span class="com_name">'.$row['name'].'</span>';
+		} else {
+			$comm .= '<span class="com_name">'.$row['facname'].'</span>';
+		}
 
-	$comm .= '<span class="com_date">'.$row['timeposted'].'</span>';
-	$comm .= '<span class="com_human">'.absHumanTiming($row['timeposted']).'</span></div>';
-	$comm .= '<div class="com_body"><pre>
-'.$row['txt'].'
-	</pre></div>
-</div><br><br>';
+		$comm .= '<span class="com_date">'.$row['timeposted'].'</span>';
+		$comm .= '<span class="com_human">'.absHumanTiming($row['timeposted']).'</span></div>';
+		$comm .= '<div class="com_body"><pre>
+	'.$row['txt'].'
+		</pre></div>
+	</div><br><br>';
 
 	}
 
@@ -245,7 +253,6 @@ if($_GET["user"] == '' ) {
 	</form>';
 }
 
-
 /* determine if assignment is still open */
 
 $sql = 'select count(*) from schedule where ava_date < NOW() and due_date > NOW() and sched_id ='.$_GET["sched"];
@@ -256,10 +263,12 @@ $row = mysql_fetch_row($result);
 
 if($row[0] == 1) { $submission = ''; } else { $submission = 'disabled=true'; }
 
+$upload_form = '<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
+<input type="file" name="file" size="40" '.$submission.'><br><br>
+<input type="submit" name="submit" value="Submit" '.$submission.'/>
+</form>';
 
 ?>
-
-<input type="button" href="" onClick='openDebug(window.location)' value="Debug">
 
 <h3><?php echo $breadcrumb; ?> -> Assignment Details</h3>
 
@@ -271,11 +280,8 @@ if($row[0] == 1) { $submission = ''; } else { $submission = 'disabled=true'; }
 	<?php echo $html; ?>
 </table>
 <br><br>
-<form action='upload.php?sched=<?php echo $_GET["sched"]; ?>' method="post" enctype="multipart/form-data">
-<input type="file" name="file" size="40" <?php echo $submission; ?>><br><br>
-<input type="submit" name="submit" value="Submit" <?php echo $submission; ?> />
-</form>
 
+	<?php echo $upload_form; ?>
 
 <br><br>
 	<?php echo $student_list; ?>
