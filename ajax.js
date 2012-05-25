@@ -32,7 +32,7 @@ function getPage( url, pageElement, waitMessage, callBack ) {
 		// START TIMER
 		var timer = new Date();
 		var t_start = timer.getTime();
-		debugEvent(url, "get");
+		//debugEvent(url, "get");
 
   // DON'T DISTURB CONTENT UNLESS NESSISARY
   if ( waitMessage != "" ) {  document.getElementById(pageElement).innerHTML = waitMessage; }

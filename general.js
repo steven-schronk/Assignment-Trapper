@@ -34,12 +34,9 @@ function line_comment_cancel(line_com)
 
 function line_comment_save(file_id, line_num, page_element, comment)
 {
-	alert(document.getElementById(comment));
-	//alert("got here");
-	//alert(file_id + " " + line_num);
-	getPage("line_comment.php?file_id="+file_id+"&line_num="+line_num+"&comment=\""+document.getElementById(comment).value+"\"", page_element, "Please Wait")
-	//http://localhost/at/line_comment.php?file_id=1&line_num=2&comment=hello
 	// verify payload not empty
+	if(document.getElementById(comment).value == "") { return; }
+	getPage("line_comment.php?file_id="+file_id+"&line_num="+line_num+"&comment=\""+document.getElementById(comment).value+"\"", page_element, "Please Wait")
 }
 
 function line_comment_refresh(page_element)

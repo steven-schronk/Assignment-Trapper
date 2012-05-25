@@ -3,7 +3,10 @@
 include_once("auth.php");
 include_once("time.php");
 
-if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
+//if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
+
+ // prevents students from seeing other's work
+if($role != 0) { $_GET["user"] = $user_id; }
 
 if (!$_GET["sched"]) { die("No Assignment Requested"); }
 
@@ -112,15 +115,16 @@ if($_GET["user"] == '' ) {
 
 
 		// get all comments for this particular file
-		$sql = "select filecom_id, file_id, line_no, user_id, txt, timeposted from filecom where file_id=".$row[0]." order by line_no, timeposted";
-	
+		//$sql = "select filecom_id, file_id, line_no, user_id, txt, timeposted from filecom where file_id=".$row[0]." order by line_no, timeposted";
+		$sql = 'select line_no, filecom.user_id, name,  timeposted, txt from filecom, users where (users.user_id = filecom.user_id) and file_id='.$row[0].' order by line_no, timeposted';
+
+		//echo $sql;
+
 		$filecom = mysql_query($sql);
 		if (!$filecom) { die("SQL ERROR: File Comments"); }
 
 		// only get first line comment
 		$filecoms = mysql_fetch_array($filecom);
-
-		// TODO: COMPLETE GETTING FILE COMMENTS
 
 		$code = $row[5];
 		/* escape open and close symbols <> */
@@ -148,16 +152,26 @@ if($_GET["user"] == '' ) {
 		foreach($lines AS $line)
 		{
 			// we only get line comments as they are needed
-			if($filecoms['line_no'] == $i) {
-				// comment lies in here if present and empty form hides here if not...
-				//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
+			if($filecoms['line_no'] == $i) { // comment exists for this line
+
+				do {
+					// run through comment rows for this line for display
+					$code .= "<div class=line_comment_display>";
+					$code .= "<img src='gfx/down_arrow.png'>";
+					$code .= "<span class=line_comment_txt>".$filecoms['txt']."</span>";
+					$code .= "<span class=line_comment_name>".$filecoms['name']."</span>";
+					$code .= "<span class=line_comment_time>".absHumanTiming($filecoms['timeposted'])."</span>";
+					$code .= "</div>";
+
+					$filecoms = mysql_fetch_array($filecom); // get next line comment
+
+				} while ($filecoms['line_no'] == $i);
+
 				$code .= "<div id='line_com_".$row[0]."_".$i."' class='line_comment'>";
 				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$row[0]."_".$i."' type=text size=100>&nbsp;&nbsp;";
 				$code .= "<button onClick='line_comment_save(".$row[0].", ".$i.", \"line_com_".$row[0]."_".$i."\",\"line_com_val_".$row[0]."_".$i."\");'>Save</button>&nbsp;&nbsp;";
 				$code .= "<button onClick='line_comment_cancel(\"line_com_".$row[0]."_".$i."\");'>Cancel</button></div>";
-			} else {
-				// comment lies in here if present and empty form hides here if not...
-				//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
+			} else { // no comment for this line
 				$code .= "<div id='line_com_".$row[0]."_".$i."' class='line_comment'>";
 				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$row[0]."_".$i."' type=text size=100>&nbsp;&nbsp;";
 				$code .= "<button onClick='line_comment_save(".$row[0].", ".$i.", \"line_com_".$row[0]."_".$i."\",\"line_com_val_".$row[0]."_".$i."\");'>Save</button>&nbsp;&nbsp;";
@@ -176,6 +190,7 @@ if($_GET["user"] == '' ) {
 				<span class="fname">'.$row[2].'</span>
 				<span class="fsize">'.$row[3].'B</span>
 				<span class="fdate">'.$row[4].'</span>
+				<span class="fhuman">'.absHumanTiming($row[4]).'</span>
 				<!-- <span class="fedit"><button>Edit</button></span>
 				<span class="fraw"><button>Raw</button></span>-->
 			</div>
@@ -193,7 +208,6 @@ if($_GET["user"] == '' ) {
 	//$sql = 'select comment_id, name, sub_id, txt, timeposted, comments.role from comments, users where (users.user_id = comments.user_id) and comments.user_id='.$_GET["user"].' and sub_id='.$_GET["sched"].' order by timeposted';
 
 	$sql = 'select comment_id, stdusers.name, sub_id, fac_id, facusers.name as facname, txt, timeposted, comments.role from users stdusers,comments LEFT JOIN users facusers on (facusers.user_id = comments.fac_id) where (stdusers.user_id = comments.user_id) and comments.user_id='.$_GET["user"].' and sub_id='.$_GET["sched"].' order by timeposted';
-
 
 	//echo $sql;
 
@@ -214,8 +228,9 @@ if($_GET["user"] == '' ) {
 		$comm .= '<span class="com_name">'.$row['facname'].'</span>';
 	}
 
-	$comm .= '<span class="com_date">'.$row['timeposted'].'</span></div>
-	<div class="com_body"><pre>
+	$comm .= '<span class="com_date">'.$row['timeposted'].'</span>';
+	$comm .= '<span class="com_human">'.absHumanTiming($row['timeposted']).'</span></div>';
+	$comm .= '<div class="com_body"><pre>
 '.$row['txt'].'
 	</pre></div>
 </div><br><br>';
@@ -230,6 +245,18 @@ if($_GET["user"] == '' ) {
 	</form>';
 }
 
+
+/* determine if assignment is still open */
+
+$sql = 'select count(*) from schedule where ava_date < NOW() and due_date > NOW() and sched_id ='.$_GET["sched"];
+
+$result = mysql_query($sql);
+
+$row = mysql_fetch_row($result);
+
+if($row[0] == 1) { $submission = ''; } else { $submission = 'disabled=true'; }
+
+
 ?>
 
 <input type="button" href="" onClick='openDebug(window.location)' value="Debug">
@@ -243,6 +270,13 @@ if($_GET["user"] == '' ) {
 
 	<?php echo $html; ?>
 </table>
+<br><br>
+<form action='upload.php?sched=<?php echo $_GET["sched"]; ?>' method="post" enctype="multipart/form-data">
+<input type="file" name="file" size="40" <?php echo $submission; ?>><br><br>
+<input type="submit" name="submit" value="Submit" <?php echo $submission; ?> />
+</form>
+
+
 <br><br>
 	<?php echo $student_list; ?>
 	

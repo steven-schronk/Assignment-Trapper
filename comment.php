@@ -28,7 +28,7 @@ if (!$result) { die("SQL ERROR"); } else {
 
 echo "Data Posted Sucessfully<br><br>";
 
-echo 'Click <a href=detail.php?sched='.$_GET["sched"].'>Here</a> To Return to Assignment Details';
+echo 'Click <a href=detail_root.php?sched='.$_GET["sched"].'>Here</a> To Return to Assignment Details';
 
 
 //echo '<html><meta http-equiv="refresh" content="0; detail.php?sched='.$_GET["sched"].'" /></html>';

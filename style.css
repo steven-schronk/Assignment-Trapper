@@ -37,20 +37,21 @@ table.gridtable td {
 
 /*.comment {border:1px solid #ddd; width: 95%; margin-left: 10px; margin-right: 10px;}*/
 .com_body { padding-left: 15px; }
-.com_date_human { position: relative; left: 100px; top: -8px; color: #888;}
-.com_date { position: relative; left: 400px; top: -28px; color: #888;}
-.com_name { position: relative; left: 15px; top: -8px;  }
+/*.com_date_human { position: relative; left: 100px; top: -8px; color: #888;}*/
+.com_name { position: absolute; left: 100px; padding-top: 7px;  }
 .com_head { padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #c1d5ff; }
+.com_date { position: absolute; left: 500px; padding-top: 7px; }
+.com_human { position: absolute; left: 300px; padding-top: 7px;  }
 
 .comment_username { position: relative; right: 100px; top: -8px; }
 .comment_time { position: relative; right: 0px; top: -8px;  }
 
-.fname { position: relative; left: 15px; top: -8px;  }
-.fsize { position: relative;  left: 40px; top: -8px;  color: #888; }
-.fdate { position: relative;  left: 100px; top: -8px;  color: #888; padding-left: 25px; }
-.fedit{ position: relative;  left: 240px; top: -8px;  }
-.fraw{ position: relative;  left: 340px; top: -8px;  }
-
+.fname { position: absolute; left: 100px; padding-top: 7px;}
+.fsize { position: absolute;  left: 240px;  padding-top: 7px; color: #888; }
+.fdate { position: absolute;  left: 350px;  padding-top: 7px; color: #888;  }
+.fedit { position: relative;  left: 240px; top: -8px;  }
+.fraw  { position: relative;  left: 340px; top: -8px;  }
+.fhuman { position: absolute;  left: 550px;  padding-top: 7px; color: #888;  }
 .class_block { border:1px solid #000; width: 85%; margin: 20px; padding: 20px; background-color: #eee; }
 
 .cmnt_count { padding: 20px; }
@@ -118,4 +119,25 @@ table.gridtable td {
 	padding-bottom: 5px;
 	color: #1782b8;
 	background-color: #ddd;
+}
+
+.line_comment_display {
+	border-top: 1px solid #000;
+	padding-left: 40px;
+	padding-top: 8px;
+	padding-bottom: 5px;
+	color: #1782b8;
+	background-color: #ddd;
+}
+
+.line_comment_name {
+	color: #888;
+	position: absolute;
+	right: 55px;
+}
+
+.line_comment_time {
+	color: #888;
+	position: absolute;
+	right: 200px;
 }
