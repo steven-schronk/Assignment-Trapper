@@ -15,7 +15,6 @@ if($user_id != '') {
         			<li><a href="classes.php">Classes</a></li>
 				<li><a href="index.php">Messages</a></li>
 			        <li><a href="manage.php">Manage Accounts</a></li>
-        			<li><a href="workflow.php">Workflows</a></li>
 				<li><a href="#" onClick="logout();">'.$_COOKIE["username"].'</a></li>
 			</ul></div>';
 

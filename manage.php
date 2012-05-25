@@ -51,21 +51,26 @@ $std_locked = $row[0];
 			// ADIMINISTRATOR MENU
 ?>
 <div class="col2">
-			<h3><img src="gfx/rss.png">Feeds:</h3>
-				<a href="comment_feed.php">Full Comments</a><br>
-				<a href="assignment_feed.php">Assignments Modified</a>
+	<h3><img src="gfx/rss.png">Feeds:</h3>
+		<a href="comment_feed.php">Full Comments</a><br>
+		<a href="assignment_feed.php">Assignments Modified</a>
 
-			<h3><img src="gfx/report.png">Assignments:</h3>
-				<a href="assignment_add.php">Add New Assignment</a><br>
+	<h3><img src="gfx/report.png">Assignments:</h3>
+		<a href="assignment_add.php">Add New Assignment</a><br>
 
-			<h3><img src="gfx/user_female.png">Users:</h3>
-				<a href="enrollment.php">Enrollment Manager</a><br>
-				<a href="enrollment_new.php">New Enrollment</a><br>
-				<a href="password_change.php">Change Personal Password</a><br>
-				<a href="password_change_user.php">Change User Password</a><br>
+	<h3><img src="gfx/user_female.png">Users:</h3>
+		<a href="enrollment.php">Enrollment Manager</a><br>
+		<a href="enrollment_new.php">New Enrollment</a><br>
+		<a href="password_change.php">Change Personal Password</a><br>
+		<a href="password_change_user.php">Change User Password</a><br>
 
-			<h3><img src="gfx/database.png">System Admin:</h3>
-				<a href="adminer.php">SQL Admin</a><br>
+	<h3><img src="gfx/report.png">Workflows:</h3>
+		<a href="index.php">Comments From Students</a><br>
+		<a href="workflow_comments.php">Most Recent Comments</a><br>
+		<a href="workflow_ungraded.php">Assignments Ready For Grading</a>
+
+	<h3><img src="gfx/database.png">System Admin:</h3>
+		<a href="adminer.php">SQL Admin</a><br>
 
 </div>
 <div class="col">
