@@ -72,7 +72,7 @@ include 'include/std_functions.php';
 		exit;
 
 	} else {
-		$sql = 'INSERT INTO schedule VALUES ("",'.$_POST['class'].','.$_POST['st']. ',"'.$_POST['title']. '","'.$_POST['chapter']. '","'.$_POST['section_id']. '","'.$_POST['ava_date']. '","'.$_POST['due_date']. '", NOW())';
+		$sql = 'INSERT INTO schedule VALUES ("",'.$_POST['class'].','.$_POST['st']. ',"'.$_POST['title']. '","'.$_POST['chapter']. '","'.$_POST['section_id']. '","'.$_POST['ava_date']. '","'.$_POST['due_date']. '", NOW(), 0)';
 
 		//echo $sql;
 

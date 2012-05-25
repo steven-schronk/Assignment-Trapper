@@ -38,6 +38,7 @@ CREATE TABLE schedule (
 	ava_date  DATETIME NOT NULL,			# date for opening of assignment
 	due_date DATETIME NOT NULL,			# due date for assignment
 	timeposted timestamp NOT NULL,			# time posting
+	graded int NOT NULL,				# 0 for no and 1 for yes
 	PRIMARY KEY (sched_id)
 );
 

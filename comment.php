@@ -1,6 +1,7 @@
 <?php
 
 include_once("auth.php");
+include_once("header.php");
 
 if (!$_GET["comment"]) { die("No Comment Sent");     }
 if (!$_GET["sched"])   { die("No Schedule ID Sent"); }

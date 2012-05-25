@@ -61,10 +61,10 @@ while($row = mysql_fetch_array($result))
                 <description>An assignment for '.$row['class_name'].' has been updated.&lt;p&gt;Name: '.$row['title'].'&lt;p&gt;Chapter: '.$row['chapter'].'&lt;p&gt;Type: '.$row['type_name'].'&lt;p&gt;Section: 
 		'.$row['section_id'].'&lt;p&gt;Avaliable Date: '.$row['ava_date'].'
 		&lt;p&gt;Due Date: '.$row['due_date'].'</description>
-                <link>'.$server_url_base.'/at/detail.php?sched='.$row['sched_id'].'&amp;random='.$row['timeposted_num'].'</link>
+                <link>'.$server_url_base.'/at/detail_root.php?sched='.$row['sched_id'].'&amp;random='.$row['timeposted_num'].'</link>
 		<author>steven.schronk@my.tccd.edu (Schronk, Steven)</author>
 		<category domain="assignmnet feed">assignments</category>
-                <guid>'.$server_url_base.'/at/detail.php?sched='.$row['sched_id'].'</guid>
+                <guid>'.$server_url_base.'/at/detail_root.php?sched='.$row['sched_id'].'</guid>
                 <pubDate>'.$row['timeposted'].'</pubDate>
         </item>
 ';

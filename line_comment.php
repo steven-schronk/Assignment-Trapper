@@ -11,21 +11,23 @@ if ($_GET["comment"] == "")  { die("Comment of Zero Length Cannot Be Posted"); }
 
 $_GET["file_id"] = mysql_real_escape_string($_GET["file_id"]);
 $_GET["line_num"] = mysql_real_escape_string($_GET["line_num"]);
-//$_GET["comment"] = mysql_real_escape_string($_GET["comment"]);
+
+// comments are being sent with double quotes on each end... remove them
+$comment = substr($_GET[comment], 1, -1);
+
+$comment = mysql_real_escape_string($comment);
 
 //TODO: Verify that this file belongs to user if role not root...
 
+
 // insert comment contents into DB
-$sql = 'insert into filecom values ("", '.$_GET["file_id"].','.$_GET["line_num"].','.$user_id.','.$_GET["comment"].',NOW())';
+$sql = 'insert into filecom values ("", '.$_GET["file_id"].','.$_GET["line_num"].','.$user_id.',"'.$comment.'",NOW())';
 
 //echo $sql;
 
 $result = mysql_query($sql);
 
 if (!$result) { die("SQL ERROR: File Comment Insert"); }
-
-// strip quotes off ends of comment.
-$comment = substr($_GET[comment], 1, -1);
 
 $html = '';
 $html .= "<img src='gfx/down_arrow.png'>";

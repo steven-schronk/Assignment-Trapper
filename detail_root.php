@@ -1,6 +1,7 @@
 <?php
 
 include_once("auth.php");
+include_once("header.php");
 include_once("time.php");
 
 //if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
@@ -25,7 +26,7 @@ if($row[0] == 1) { $submission = 'Open'; } else { $submission = 'Closed'; }
 /* get assignment details */
 $html = "";
 
-$sql = "select chapter, section_id, title, class_id, schedule.assign_type, ava_date, due_date, sched_id, NOW()-due_date as status, type_name from schedule, types where (schedule.assign_type = types.assign_type) and sched_id=".$_GET["sched"]." order by due_date desc, ava_date desc";
+$sql = "select chapter, section_id, title, class_id, schedule.assign_type, ava_date, due_date, sched_id, NOW()-due_date as status, type_name, graded from schedule, types where (schedule.assign_type = types.assign_type) and sched_id=".$_GET["sched"]." order by due_date desc, ava_date desc";
 
 $result = mysql_query($sql);
 
@@ -37,7 +38,12 @@ while($row = mysql_fetch_row($result))
 {
 	$html .= '<tr>';
 
-	if($row[8] > 0) { $html .= "<td><img src=gfx/bullet_delete.png></td>"; } else { $html .= "<td><img src=gfx/bullet_add.png></td>"; }
+	// assignment open?
+	if($row[8] > 0) { $html .= "<td><img src=gfx/bullet_delete.png>"; } else { $html .= "<td><img src=gfx/bullet_add.png>"; }
+
+	// assignment graded?
+	if($row[12]) { $html .= "<img src=gfx/bullet_disk.png></td>"; } else { $html .= "<img src=gfx/bullet_wrench.png></td>"; }
+
 
 	$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
@@ -168,8 +174,6 @@ if($_GET["user"] == '' ) {
 
 					} while ($filecoms['line_no'] == $i);
 
-					
-
 					$code .= "<div id='line_com_".$row2['file_id']."_".$i."' class='".$comm_class."'>";
 					$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$row2['file_id']."_".$i."' type=text size=100>&nbsp;&nbsp;";
 					$code .= "<button onClick='line_comment_save(".$row2['file_id'].", ".$i.", \"line_com_".$row2['file_id']."_".$i."\",\"line_com_val_".$row2['file_id']."_".$i."\");'>Save</button>&nbsp;&nbsp;";
@@ -181,12 +185,13 @@ if($_GET["user"] == '' ) {
 					$code .= "<button onClick='line_comment_cancel(\"line_com_".$row2['file_id']."_".$i."\");'>Cancel</button></div>";			
 				}
 
-				$code .= "<div id='line' onClick='line_comment(\"line_com_".$row2['file_id']."_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
-				if($line == '') { $code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";
-				} else {          $code .= "<pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
+				$code .= "<div id='line' onClick='line_comment(\"line_com_".$row2['file_id']."_".$i."\" , \"line_com_val_".$row2['file_id']."_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
+				if($line == '') { 	$code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";
+				} elseif($line == "\r") {
+							$code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";
+				} else {          	$code .= "<pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
 				$i++;
 			}
-		
 
 		// header for file
 		$files .= '<div class="file">
@@ -211,7 +216,7 @@ if($_GET["user"] == '' ) {
 
 
 	/* get comments for this assignment */
-	$sql = 'select comment_id, stdusers.name, sub_id, fac_id, facusers.name as facname, txt, timeposted, comments.role from users stdusers,comments LEFT JOIN users facusers on (facusers.user_id = comments.fac_id) where (stdusers.user_id = comments.user_id) and comments.user_id='.$_GET["user"].' and sub_id='.$_GET["sched"].' order by timeposted';
+	$sql = 'select comment_id, stdusers.name, sub_id, fac_id, facusers.name as facname, txt, timeposted, comments.role from users stdusers, comments LEFT JOIN users facusers on (facusers.user_id = comments.fac_id) where (stdusers.user_id = comments.user_id) and comments.user_id='.$_GET["user"].' and sub_id='.$_GET["sched"].' order by timeposted';
 
 	//echo $sql;
 
@@ -239,18 +244,31 @@ if($_GET["user"] == '' ) {
 		$comm .= '<span class="com_date">'.$row['timeposted'].'</span>';
 		$comm .= '<span class="com_human">'.absHumanTiming($row['timeposted']).'</span></div>';
 		$comm .= '<div class="com_body"><pre>
-	'.$row['txt'].'
+'.$row['txt'].'
 		</pre></div>
 	</div><br><br>';
 
 	}
 
-	$comment_form = '<form action="comment.php" method="get">
+	$comment_form = '<div class="comment_box">Add Comment:<form action="comment.php" method="get">
 	<textarea name="comment" id="comment" cols="85" rows="6"></textarea><br><br>
 	<input name="sched" type="hidden" value='.$_GET["sched"].'>
 	<input name="user" type="hidden" value='.$_GET["user"].'>
 	<input type="submit" value="Add Comment" />
-	</form>';
+	</form></div>';
+}
+
+/* if root user get student name for this assignment to put on page */
+if($role == 0)
+{
+	$sql = 'select name from users where user_id='.$_GET["user"];
+	
+	$result = mysql_query($sql);
+
+	$row = mysql_fetch_row($result);
+
+	$student_user_name = $row[0];
+
 }
 
 /* determine if assignment is still open */
@@ -261,12 +279,47 @@ $result = mysql_query($sql);
 
 $row = mysql_fetch_row($result);
 
-if($row[0] == 1) { $submission = ''; } else { $submission = 'disabled=true'; }
+if($row[0] == 1) { 
+	$upload_form = '<div class="comment_box">Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
+		<input type="file" name="file" size="40"><br><br>
+		<input type="submit" name="submit" value="Submit"/>
+		</form></div>';
+} else {
+	$upload_form = '';
+}
 
-$upload_form = '<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
-<input type="file" name="file" size="40" '.$submission.'><br><br>
-<input type="submit" name="submit" value="Submit" '.$submission.'/>
-</form>';
+
+/* generate next and back buttons */
+
+if($role == 0) {
+
+// list of all students alphabetically in this class
+// select enrollment.user_id, name  from schedule, enrollment, users where (schedule.class_id = enrollment.class_id) and (enrollment.user_id = users.user_id) and sched_id =1 order by name, email, user_id;
+
+	$sql = 'select enrollment.user_id, name  from schedule, enrollment, users where (schedule.class_id = enrollment.class_id) and (enrollment.user_id = users.user_id) and sched_id = '.$_GET["sched"].' and name < "'.$student_user_name.'" order by name desc, email desc, user_id desc limit 1';
+
+	$result = mysql_query($sql);
+
+	$row = mysql_fetch_array($result);
+
+	//echo $sql;
+
+	if ($row['user_id']) { $back_button = '<a href=detail_root.php?sched='.$_GET["sched"].'&user='.$row['user_id'].'><img src="gfx/resultset_previous.png" style="border-style: none"></a>'; } else { $back_button = '<img src="gfx/resultset_previous_disabled.png" style="border-style: none">'; }
+
+	$sql = 'select enrollment.user_id, name  from schedule, enrollment, users where (schedule.class_id = enrollment.class_id) and (enrollment.user_id = users.user_id) and sched_id = '.$_GET["sched"].' and name > "'.$student_user_name.'" order by name, email, user_id limit 1';
+
+	$result = mysql_query($sql);
+
+	$row = mysql_fetch_array($result);
+
+	//echo "<br>".$sql;
+
+	if ($row['user_id']) { $next_button = '<a href=detail_root.php?sched='.$_GET["sched"].'&user='.$row['user_id'].'><img src="gfx/resultset_next.png" style="border-style: none"></a>'; } else { $next_button = '<img src="gfx/resultset_next_disabled.png" style="border-style: none">'; }
+
+	$next_back_buttons = '<center>'.$back_button;
+	$next_back_buttons .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+	$next_back_buttons .= $next_button.'</center>';
+}
 
 ?>
 
@@ -280,19 +333,19 @@ $upload_form = '<form action="upload.php?sched='.$_GET["sched"].'" method="post"
 	<?php echo $html; ?>
 </table>
 <br><br>
+	<?php echo $next_back_buttons; ?>
 
 	<?php echo $upload_form; ?>
 
 <br><br>
 	<?php echo $student_list; ?>
-	
+	<?php echo "<h1>".$student_user_name."</h1>"; ?>
 	<?php echo $files; ?>
-
+	<?php echo $next_back_buttons; ?>
+	<?php echo "<h1>".$student_user_name."</h1>"; ?>
 	<?php echo $comm; ?>
-
 	<?php echo $comment_form; ?>
 
+	
+
 </html>
-
-
-

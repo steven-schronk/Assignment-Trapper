@@ -1,7 +1,7 @@
 <?php
 
 include_once("auth.php");
-
+include_once("header.php");
 include_once("conn.php");
 
 if($_COOKIE["username"]) { $username = $_COOKIE["username"]; } else { $username = $_POST['username']; }

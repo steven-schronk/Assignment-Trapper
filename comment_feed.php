@@ -33,10 +33,10 @@ while($row = mysql_fetch_array($result))
         <item>
                 <title>'.$row['name'].' - '.$row['title'].' - '.$row['type_name'].'</title>
                 <description>'.$row['txt'].'</description>
-                <link>'.$server_url_base.'/at/detail.php?sched='.$row['sub_id'].'</link>
+                <link>'.$server_url_base.'/at/detail_root.php?sched='.$row['sub_id'].'</link>
 		<author>'.$row['email'].' ('.$row['name'].')</author>
 		<category domain="comment feed">comments</category>
-                <guid>'.$server_url_base.'/at/detail.php?sched='.$row['sub_id'].'random='.$i.'</guid>
+                <guid>'.$server_url_base.'/at/detail_root.php?sched='.$row['sub_id'].'random='.$i.'</guid>
                 <pubDate>'.$row['timeposted'].'</pubDate>
         </item>
 ';

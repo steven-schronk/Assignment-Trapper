@@ -1,6 +1,7 @@
 <?php
 
 include_once("auth.php");
+include_once("header.php");
 
 include_once("time.php");
 
@@ -26,20 +27,30 @@ $breadcrumb =  '<a href=assignment.php?class='.$row['class_id'].'>'.$row['class_
 /* get list of assignments */
 $html = "";
 
-$sql = "select chapter, section_id, title, class_id, schedule.assign_type, ava_date, due_date, sched_id, NOW()-due_date as due, type_name, NOW()-ava_date as ava, due_date from schedule, types where (schedule.assign_type = types.assign_type) and class_id=". $_GET['class']." order by due_date desc, ava_date desc";
+if($role == 0) {
+	$sql = "select chapter, section_id, title, class_id, schedule.assign_type, ava_date, due_date, sched_id, NOW()-due_date as due, type_name, NOW()-ava_date as ava, due_date, graded from schedule, types where (schedule.assign_type = types.assign_type) and class_id=". $_GET['class']." order by due_date desc, ava_date desc, title, chapter, section_id, schedule.assign_type";
+
+} else {
+
+	$sql = "select chapter, section_id, title, class_id, schedule.assign_type, ava_date, due_date, sched_id, NOW()-due_date as due, type_name, NOW()-ava_date as ava, due_date, graded from schedule, types where (schedule.assign_type = types.assign_type) and class_id=". $_GET['class']." and NOW()-ava_date > 0 order by due_date desc, ava_date desc, title, chapter, section_id, schedule.assign_type";
+
+}
 
 $result = mysql_query($sql);
 
 //echo $sql;
 
 if (!$result) { die("SQL ERROR"); }
-$i = 1;
 while($row = mysql_fetch_row($result))
 {
-	$html .= '<tr><td>'.$i.'</td>';
+	$html .= '<tr><td>'.$row[7].'</td>';
 	//$html .= '<tr><td>'.$row[10].'</td>';
 
-	if($row[8] > 0 || $row[10] < 0) { $html .= "<td><img src=gfx/bullet_delete.png></td>"; } else { $html .= "<td><img src=gfx/bullet_add.png></td>"; }
+	// assignment open?
+	if($row[8] > 0 || $row[10] < 0) { $html .= "<td><img src=gfx/bullet_delete.png>"; } else { $html .= "<td><img src=gfx/bullet_add.png>"; }
+
+	// assignment graded?
+	if($row[12]) { $html .= "<img src=gfx/bullet_disk.png></td>"; } else { $html .= "<img src=gfx/bullet_wrench.png></td>"; }
 
 	if($role == 0 ) { 
 		$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
@@ -54,7 +65,6 @@ while($row = mysql_fetch_row($result))
 	if($role==0) { $html .= '<td><a href="assignment_add.php?sched='.$row[7].'&action=edit">Edit</a></td>'; }
 
 	$html .= '</tr>';
-	$i++;
 }
 
 ?>

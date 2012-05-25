@@ -1,6 +1,7 @@
 <?php
 
 include_once("auth.php");
+include_once("header.php");
 
 if($role==0) {
 
@@ -47,32 +48,39 @@ $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 
 $file_count = $row[0];
-
+			// ADIMINISTRATOR MENU
 ?>
 			<div class="col2">
-			<h3>Feeds:</h3>
+			<h3><img src="gfx/rss.png">Feeds:</h3>
+				<a href="comment_feed.php">Full Comments</a><br>
+				<a href="assignment_feed.php">Assignments Modified</a>
 
-			<img src="gfx/rss.png"><a href="comment_feed.php">Full Comments</a><br>
-			<img src="gfx/rss.png"><a href="assignment_feed.php">Assignments Modified</a>
+			<h3><img src="gfx/report.png">Assignments:</h3>
+				<a href="assignment_add.php">Add New Assignment</a><br>
 
-			<h3>Links:</h3>
-			<a href="assignment_add.php">Add New Assignment</a><br>
-			<a href="enrollment.php">Enrollment Manager</a><br>
-			<a href="enrollment_new.php">New Enrollment</a><br>
-			<a href="password_change.php">Change Password</a><br>
+			<h3><img src="gfx/user_female.png">Users:</h3>
+				<a href="enrollment.php">Enrollment Manager</a><br>
+				<a href="enrollment_new.php">New Enrollment</a><br>
+				<a href="password_change.php">Change Personal Password</a><br>
+				<a href="password_change_user.php">Change User Password</a><br>
+
+			<h3><img src="gfx/database.png">System Admin:</h3>
+				<a href="adminer.php">SQL Admin</a><br>
+
 			</div>
 			<div class="col1">
-				<table>
+				<table class="gridtable">
+					<tr><th>Stat</th><th>Value</th></tr>
 					<tr><td>Users:</td><td><?php echo $user_count; ?></td></tr>
 					<tr><td>Assignments:</td><td><?php echo $assignment_count; ?></td></tr>
-					<tr><td>File Count:</td><td><?php echo $file_count; ?></td></tr>
+					<tr><td>Files:</td><td><?php echo $file_count; ?></td></tr>
 					<tr><td>Comments:</td><td><?php echo $comment_count; ?></td></tr>
 					<tr><td>Line Comments:</td><td><?php echo $filecomm_count; ?></td></tr>
 				</table>
 			</div>
 <?php
 
-} else {
+} else {		// STUDENT MENU
 
 ?>
 			<h3>Feeds:</h3>

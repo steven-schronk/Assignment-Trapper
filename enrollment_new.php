@@ -1,6 +1,7 @@
 <?php
 
 include_once("auth.php");
+include_once("header.php");
 
 if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
 

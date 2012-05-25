@@ -4,6 +4,7 @@ red    = #ffb2d2 code
 blue   = #c5bcff comments
 yellow = #ffefb2 faculty
 green  = #deffb2 students
+lt grey= #666
 
 */
 
@@ -58,11 +59,11 @@ table.gridtable td {
 .line_numbers{background-color:#ececec;color:#aaa;padding:1em .5em;border-right:1px solid #ddd;text-align:right;}
 
 /* .file {border:1px solid #ddd; } */
-.file_head {  padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #ffb2d2; }
+.file_head {  padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #c5bcff; }
 
 /*.comment {border:1px solid #ddd; width: 95%; margin-left: 10px; margin-right: 10px;}*/
 .com_body { padding-left: 15px; }
-/*.com_date_human { position: relative; left: 100px; top: -8px; color: #888;}*/
+/*.com_date_human { position: relative; left: 100px; top: -8px; color: #666;}*/
 .com_name { position: absolute; left: 100px; padding-top: 7px;  }
 .com_head     { padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #deffb2; }
 .com_head_fac { padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #ffefb2; }
@@ -73,11 +74,11 @@ table.gridtable td {
 .comment_time { position: relative; right: 0px; top: -8px;  }
 
 .fname { position: absolute; left: 100px; padding-top: 7px;}
-.fsize { position: absolute;  left: 240px;  padding-top: 7px; color: #888; }
-.fdate { position: absolute;  left: 350px;  padding-top: 7px; color: #888;  }
+.fsize { position: absolute;  right: 500px;  padding-top: 7px; color: #666; }
+.fdate { position: absolute;  right: 250px;  padding-top: 7px; color: #666;  }
 .fedit { position: relative;  left: 240px; top: -8px;  }
 .fraw  { position: relative;  left: 340px; top: -8px;  }
-.fhuman { position: absolute;  left: 550px;  padding-top: 7px; color: #888;  }
+.fhuman { position: absolute;  right: 100px;  padding-top: 7px; color: #666;  }
 .class_block { border:1px solid #000; width: 85%; margin: 20px; padding: 20px; background-color: #eee; }
 
 .cmnt_count { padding: 20px; }
@@ -130,12 +131,16 @@ table.gridtable td {
 }
 
 .line_num {
+	width: 40px;
 	float: left;
 	background-color: #ddd;
-	text-align: left;
-	color: #aaa;
-	width: 40px;
-}
+	padding-left: 5px;
+	color: #666;
+	}
+
+.line_dat {
+	margin: 1px;
+	}
 
 .line_comment_stu {
 	border-top: 1px solid #000;
@@ -176,13 +181,21 @@ table.gridtable td {
 }
 
 .line_comment_name {
-	color: #888;
+	color: #666;
 	position: absolute;
 	right: 55px;
 }
 
 .line_comment_time {
-	color: #888;
+	color: #666;
 	position: absolute;
 	right: 200px;
+}
+
+.comment_box {
+	color: #000;
+	border: 1px solid #000;
+	background-color: #dedede;
+	padding: 20px;
+	font-size: 20px;
 }

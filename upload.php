@@ -1,7 +1,7 @@
 <?php
 
 include_once("auth.php");
-
+include_once("header.php");
 
 if (!$_GET["sched"]) { die("No Assignment Sent"); }
 

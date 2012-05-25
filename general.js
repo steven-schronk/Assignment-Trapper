@@ -21,10 +21,12 @@ function logout()
 	window.location = 'index.php';
 }
 
-function line_comment(line_com)
+function line_comment(line_com, line_input)
 {
 	// unhide div at this line
 	document.getElementById(line_com).style.display = "block";
+
+	document.getElementById(line_input).focus();
 }
 
 function line_comment_cancel(line_com)
