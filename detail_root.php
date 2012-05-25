@@ -196,7 +196,7 @@ if($_GET["user"] == '' ) {
 		// header for file
 		$files .= '<div class="file">
 			<div class="file_head"><img src="gfx/page_white_gear.png">
-				<span class="fname">'.$row2['file_name'].'</span>
+				<span class="fname"><a href=file_raw.php?file_id='.$row2['file_id'].'>'.$row2['file_name'].'</a></span>
 				<span class="fsize">'.$row2['file_size'].'B</span>
 				<span class="fdate">'.$row2['time_post'].'</span>
 				<span class="fhuman">'.absHumanTiming($row2['time_post']).'</span>
