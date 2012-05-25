@@ -11,7 +11,7 @@ if($role == 0) { // faculty sees list of students names and assignments
 
 	//$sql = 'select sched_id, title, type_name,  chapter, section_id, ava_date, due_date, graded, NOW()-due_date as due, NOW()-ava_date as ava from schedule, types where (schedule.assign_type = types.assign_type) and sched_id = ANY (select sched_id from sched_details where fac_viewed = 0 or help_me != 0 and user_id = '.$user_id.' group by sched_id) order by due_date desc, ava_date desc, title desc, chapter desc, section_id desc';
 
-	$sql ='select sched_details.sched_id, schedule.title, schedule.chapter, schedule.section_id, sched_details.user_id, users.name, help_me, sched_details.timeposted from sched_details, schedule, users where (sched_details.sched_id = schedule.sched_id) and (sched_details.user_id = users.user_id) and (fac_viewed = 0 or help_me != 0) group by sched_id order by help_me desc, sched_details.timeposted limit 50';
+	$sql ='select sched_details.sched_id, schedule.title, schedule.chapter, schedule.section_id, sched_details.user_id, users.name, help_me, sched_details.timeposted, late from sched_details, schedule, users where (sched_details.sched_id = schedule.sched_id) and (sched_details.user_id = users.user_id) and (fac_viewed = 0 or help_me != 0) group by sched_id order by help_me desc, sched_details.timeposted limit 50';
 
 	$html = '<table class="gridtable">
 			<tr>
@@ -22,7 +22,7 @@ if($role == 0) { // faculty sees list of students names and assignments
 } else { // students see list of assignments
 	//$sql = 'select sched_id, title, type_name,  chapter, section_id, graded, timeposted from schedule, types where (schedule.assign_type = types.assign_type) and sched_id = ANY (select sched_id from sched_details where user_viewed = 0 and user_id = '.$user_id.' group by sched_id) order by due_date desc, ava_date desc, title desc, chapter desc, section_id desc';
 
-	$sql ='select sched_details.sched_id, schedule.title, schedule.chapter, schedule.section_id, sched_details.user_id, users.name, help_me, sched_details.timeposted from sched_details, schedule, users where (sched_details.sched_id = schedule.sched_id) and (sched_details.user_id = users.user_id) and (user_viewed = 0 and sched_details.user_id = '.$user_id.') group by sched_id order by help_me desc, sched_details.timeposted limit 50';
+	$sql ='select sched_details.sched_id, schedule.title, schedule.chapter, schedule.section_id, sched_details.user_id, users.name, help_me, sched_details.timeposted, late from sched_details, schedule, users where (sched_details.sched_id = schedule.sched_id) and (sched_details.user_id = users.user_id) and (user_viewed = 0 and sched_details.user_id = '.$user_id.') group by sched_id order by help_me desc, sched_details.timeposted limit 50';
 
 	$html = '<table class="gridtable">
 			<tr>
@@ -53,9 +53,15 @@ while($row = mysql_fetch_array($result))
 
 		$html .= $help_icon;
 
-		if(file_count($row[4], $row[0])) {
-			$html .= '<img src=gfx/star.png></td>';
-			} else { $html .= '<img src=gfx/error.png></td>'; }
+
+		if($row['late']) {
+			$html .= '<img src=gfx/tick_off.png></td>';
+		} else {
+
+			if(file_count($row[4], $row[0])) {
+				$html .= '<img src=gfx/star.png></td>';
+				} else { $html .= '<img src=gfx/error.png></td>'; }
+		}
 
 
 		$html .= '<td>'.$row['name'].'</td>';
@@ -86,7 +92,6 @@ while($row = mysql_fetch_array($result))
 		if(file_count($user_id, $row[0])) {
 			$html .= '<img src=gfx/star.png></td>';
 			} else { $html .= '<img src=gfx/error.png></td>'; }
-
 
 		$html .= '<td><a href="detail_root.php?sched='.$row['sched_id'].'">'.$row['title'].'</a></td><td>'.$row['type_name'].'</td><td>'.$row['chapter'].'</td>';
 

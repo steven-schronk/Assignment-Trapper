@@ -35,9 +35,12 @@ CREATE TABLE sched_details (
 	user_viewed int,				# comments have been viewed by user
 	fac_viewed int,					# comments have been viewed by faculty
 	help_me int,					# students can ask for help on thier assignments
+	late int,					# students who turn in work late have assignment permanently marked
 	timeposted timestamp NOT NULL,			# time comment was posted
 	PRIMARY KEY (detail_id)
 );
+
+# alter table sched_details add column late int;
 
 CREATE TABLE schedule (
 	sched_id int NOT NULL AUTO_INCREMENT,

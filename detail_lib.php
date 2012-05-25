@@ -21,7 +21,7 @@ function detail_init($user_id, $sched_id)
 
 	if($row['count'] == 0) {
 
-		$sql = 'insert into sched_details values ("", '.$sched_id.', '.$user_id.', 1,1,0, NOW())';
+		$sql = 'insert into sched_details values ("", '.$sched_id.', '.$user_id.', 1,1,0, NOW(),0)';
 
 		//echo $sql;
 		$result = mysql_query($sql);
@@ -114,6 +114,17 @@ function detail_help_query($user_id, $sched_id, $val)
 {
 	detail_init($user_id, $sched_id);
 
+}
+
+function detail_mark_late($user_id, $sched_id)
+{
+	detail_init($user_id, $sched_id);
+	$sql = 'update sched_details set late = 1 where sched_id = '.$sched_id.' and user_id = '.$user_id;
+
+	//echo $sql;
+
+	$result = mysql_query($sql);
+	if (!$result) { die("SQL ERROR: Viewed Update"); }	
 }
 
 ?>

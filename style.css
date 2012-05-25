@@ -136,6 +136,12 @@ table.gridtable td {
     border: 1px solid #000;
     background-color: #c5bcff;
 }
+.file_head_late {
+    padding-left: 15px;
+    padding-top: 3px;
+    border: 1px solid #000;
+    background-color: #faa;
+}
 /*.comment {border:1px solid #ddd; width: 95%; margin-left: 10px; margin-right: 10px;}_NO__DOTCOMMA__AFTER__*/
 .com_body { padding-left: 15px }
 /*.com_date_human { position: relative; left: 100px; top: -8px; color: #666;}_NO__DOTCOMMA__AFTER__*/
@@ -308,4 +314,19 @@ table.gridtable td {
     background-color: #dedede;
     padding: 20px;
     font-size: 20px;
+}
+.comment_box_closed {
+    color: #d00;
+    border: 1px solid #000;
+    /*background-color: #d00;*/
+    background-color: #dedede;    
+    padding: 20px;
+    font-size: 20px;
+}
+.comment_box_closed_message {
+    position: relative;
+    float:right;
+    color: #faa;
+    font-weight:bold;
+    font-size: 120px;
 }

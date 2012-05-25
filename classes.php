@@ -19,8 +19,13 @@ while($row = mysql_fetch_row($result))
 	//$html .= '<td>'.$row[3].'</td><td>'.$row[4].'</td></tr>';
 
 	$html .= '<div class="class_block">';
-	$html .= '<table><tr><td><img src=gfx/house.png></td><td><h3><a href=assignment.php?class='.$row[0].'>'.$row[1].'</a></h3></td></tr>';
-	$html .= '<tr><td>Section:</td><td>'.$row[2].'</td></tr>';
+	//$html .= '<table><tr><td><img src=gfx/house.png></td><td><h3><a href=assignment.php?class='.$row[0].'>'.$row[1].'</a></h3></td></tr>';
+
+	$html .= '<table>
+		<tr><td><img src="gfx/house.png"></td><td class="link_header"><a href=assignment.php?class='.$row[0].'>'.$row[1].'</a></td></tr></table><br>';
+
+
+	$html .= '<table><tr><td>Section:</td><td>'.$row[2].'</td></tr>';
 	$html .= '<tr><td>Location:</td><td>'.$row[3].'</td></tr>';
 	$html .= '<tr><td>Instructor:</td><td>'.$row[4].'</td></tr>';
 	$html .= '</table></div>';

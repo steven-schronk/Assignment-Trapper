@@ -20,6 +20,7 @@ if($_GET["comment"] == "") { die("Comment Must Not Be Empty"); }
 if($role == 0) { // faculty comment to student
 	detail_viewed_update($_GET["user"], $_GET["sched"], 0, "std");
 	detail_viewed_update($_GET["user"], $_GET["sched"], 1, "fac");
+	helpme_viewed_update($_GET["user"], $_GET["sched"], 0);
 	$sql = 'insert into comments values("", '.$_GET["user"].', '.$_GET["sched"].','.$user_id.','.$role.', "'.$_GET["comment"].'", NOW())';
 } else { // student comment to faculty
 	detail_viewed_update($_GET["user"], $_GET["sched"], 1, "std");

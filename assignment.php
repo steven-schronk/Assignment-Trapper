@@ -50,8 +50,15 @@ while($row = mysql_fetch_row($result))
 	$html .= '<tr><td>'.$row[7].'</td>';
 	//$html .= '<tr><td>'.$row[10].'</td>';
 
-	// assignment open?
-	if($row[8] > 0 || $row[10] < 0) { $html .= "<td><img src=gfx/bullet_delete.png>"; } else { $html .= "<td><img src=gfx/bullet_add.png>"; }
+	// assignment started?
+	if($row[10] < 0){
+		$html .= "<td><img src=gfx/bullet_black.png>"; 
+		$started = false;
+	} else {
+		// assignment open?
+		if($row[8] > 0 || $row[10] < 0) { $html .= "<td><img src=gfx/bullet_delete.png>"; } else { $html .= "<td><img src=gfx/bullet_add.png>"; }
+		$started = true;
+	}
 
 	// assignment graded?
 	if($row[12]) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
@@ -62,9 +69,13 @@ while($row = mysql_fetch_row($result))
 			$html .= '<img src=gfx/flag_red.png>';
 		} else { $html .= '<img src=gfx/flag_white.png>'; }
 
-		if(file_count($user_id, $row[7])) {
-			$html .= '<img src=gfx/star.png></td>';
-		} else { $html .= '<img src=gfx/error.png></td>'; }
+		if(assignment_late($user_id, $row[7])) {
+			$html .= '<img src=gfx/tick_off.png></td>';
+		} else {
+			if(file_count($user_id, $row[7])) {
+				$html .= '<img src=gfx/star.png></td>';
+			} else { $html .= '<img src=gfx/error.png></td>'; }
+		}
 	}
 
 	if($role == 0 ) {
@@ -75,7 +86,11 @@ while($row = mysql_fetch_row($result))
 
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
 
-	$html .= '<td>'.absHumanTiming($row[11]).'</td>';
+	if($started) {
+		$html .= '<td>'.absHumanTiming($row[11]).'</td>';
+	} else {
+		$html .= '<td>'.absHumanTiming($row[5]).'</td>';
+	}
 
 	if($role==0) { $html .= '<td><a href="assignment_add.php?sched='.$row[7].'&action=edit">Edit</a></td>'; }
 

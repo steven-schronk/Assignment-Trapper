@@ -1,6 +1,7 @@
 <?php
 
 include_once("auth.php");
+include_once("detail_lib.php");
 //include_once("header.php");
 
 if (!$_GET["sched"]) { die("No Assignment Sent"); }
@@ -9,6 +10,7 @@ $_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
 $_FILES["file"]["name"] = mysql_real_escape_string($_FILES["file"]["name"]);
 $_FILES["file"]["size"] = mysql_real_escape_string($_FILES["file"]["size"]);
 
+/*
 $sql = "select count(*) as count, class_id, due_date from schedule where due_date > NOW() and sched_id=".$_GET["sched"];
 
 $result = mysql_query($sql);
@@ -21,6 +23,23 @@ if($row[0] == 0) { die("Assignment Not Open For Submission"); }
 
 $deadline = $row[1];
 $class_id = $row[2];
+*/
+
+/* if assignment was late - mark assignment details as late */
+$sql = 'select due_date-NOW() as late from schedule where sched_id = '.$_GET["sched"];
+
+//echo $sql;
+
+$result = mysql_query($sql);
+
+if (!$result) { die("SQL ERROR: File Details For File Late"); }
+
+$row = mysql_fetch_array($result);
+
+if($row['late'] < 0) {
+	detail_mark_late($user_id, $_GET["sched"]);
+	detail_viewed_update($user_id, $_GET["sched"], 0, "fac");
+}
 
 /* check for correct file extension */
 $allowedExtensions = array("c", "cpp", "c++", "h", "hpp");

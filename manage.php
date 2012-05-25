@@ -97,14 +97,48 @@ $std_locked = $row[0];
 
 } else {		// STUDENT MENU
 
+
+$sql = 'select count(*), max(time_post) from files where user_id = '.$user_id;
+
+$result = mysql_query($sql);
+$row = mysql_fetch_row($result);
+$file_count = $row[0];
+$file_max = $row[1];
+
+$sql ='select count(*), max(timeposted) from comments where user_id = '.$user_id;
+
+$result = mysql_query($sql);
+$row = mysql_fetch_row($result);
+$comment_count = $row[0];
+$comment_max = $row[1];
+
+$sql = 'select count(*), max(timeposted) from filecom where user_id = '.$user_id;
+
+$result = mysql_query($sql);
+$row = mysql_fetch_row($result);
+$filecomm_count = $row[0];
+$filecomm_max = $row[1];
+
 ?>
-			<h3>Feeds:</h3>
-
-			<img src="gfx/rss.png"><a href="comment_feed.php">Full Comments</a><br>
-			<img src="gfx/rss.png"><a href="assignment_feed.php">Assignments Modified</a>
-
-			<h3>Links:</h3>
-			<a href="password_change.php">Change Password</a><br>
-		
+<div class="col2">
+	<table>
+		<tr><td><img src="gfx/rss.png"></td><td class="link_header">Feeds</td></tr>
+		<tr><td></td><td><a href="comment_feed.php">Full Comments</a></td></tr>
+		<tr><td></td><td><a href="assignment_feed.php">Assignments Modified</a></td></tr>
+	</table>
+	<br><br>
+	<table>
+		<tr><td><img src="gfx/world_link.png"></td><td class="link_header">Links</td></tr>
+		<tr><td></td><td><a href="password_change.php">Change Password</a></td></tr>
+	</table>
+</div>
+<div class="col">
+	<table class="gridtable">
+	<tr><th>Stat</th><th>Value</th><th>Human Time</th><th>Last Updated</th></tr>
+	<tr><td>Files:</td><td><?php echo $file_count; ?></td><td><?php echo absHumanTiming($file_max); ?></td><td><?php echo $file_max; ?></td></tr>
+	<tr><td>File Comments:</td><td><?php echo $filecomm_count; ?></td><td><?php echo absHumanTiming($filecomm_max); ?></td><td><?php echo $filecomm_max; ?></td></tr>
+	<tr><td>Comments:</td><td><?php echo $comment_count; ?></td><td><?php echo absHumanTiming($comment_max); ?></td><td><?php echo $comment_max; ?></td></tr>
+	</table>
+</div>
 
 <?php } ?>

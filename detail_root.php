@@ -10,21 +10,12 @@ if($role != 0) { $_GET["user"] = $user_id; }
 
 if (!$_GET["sched"]) { die("No Assignment Requested"); }
 
+if(isset($_GET["user"])) { $user_data_sent = true; }
+
 $_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
-
-/* determine if assignment is still open */
-
-$sql = 'select count(*) from schedule where ava_date < NOW() and due_date > NOW() and sched_id ='.$_GET["sched"];
-
-$result = mysql_query($sql);
-
-$row = mysql_fetch_row($result);
-
-if($row[0] == 1) { $submission = 'Open'; } else { $submission = 'Closed'; }
-
+$_GET["user"] = mysql_real_escape_string($_GET["user"]);
 
 /* get help status for this assignment */
-
 if($role == 0) {
 
 	if($_GET["user"]) { 
@@ -41,10 +32,6 @@ if($role == 0) {
 			$help_stat = 'Enable';
 			$help_icon = '<img src=gfx/flag_white.png>';
 		}
-
-		if(file_count($_GET["user"], $_GET["sched"])) {
-			$file_count .= '<img src=gfx/star.png></td>';
-			} else { $file_count .= '<img src=gfx/error.png></td>'; }
 	}
 } else {
 	$sql = 'select help_me from sched_details where sched_id ='.$_GET["sched"].' and user_id = '.$user_id;
@@ -60,16 +47,32 @@ if($role == 0) {
 		$help_stat = 'Enable';
 		$help_icon = '<img src=gfx/flag_white.png>';
 	}
+}
 
-	if(file_count($user_id, $_GET["sched"])) {
-		$file_count .= '<img src=gfx/star.png></td>';
+/* get files / late status for this assignment */
+if($role == 0 && $_GET["user"]) {
+	if(assignment_late($_GET["user"], $_GET["sched"])) {
+		$file_count .= '<img src=gfx/tick_off.png></td>';
+	} else {
+		if(file_count($_GET["user"], $_GET["sched"])) {
+			$file_count .= '<img src=gfx/star.png></td>';
 		} else { $file_count .= '<img src=gfx/error.png></td>'; }
+	}
+
+} else {
+	if(assignment_late($user_id, $_GET["sched"])) {
+		$file_count .= '<img src=gfx/tick_off.png></td>';
+	} else {
+		if(file_count($user_id, $_GET["sched"])) {
+			$file_count .= '<img src=gfx/star.png></td>';
+		} else { $file_count .= '<img src=gfx/error.png></td>'; }
+	}
 }
 
 /* get assignment details */
 $html = "";
 
-$sql = "select chapter, section_id, title, class_id, schedule.assign_type, ava_date, due_date, sched_id, NOW()-due_date as status, type_name, graded from schedule, types where (schedule.assign_type = types.assign_type) and sched_id=".$_GET["sched"]." order by due_date desc, ava_date desc";
+$sql = "select chapter, section_id, title, class_id, schedule.assign_type, ava_date, due_date, sched_id, NOW()-due_date as status, type_name, graded, NOW()-ava_date as ava from schedule, types where (schedule.assign_type = types.assign_type) and sched_id=".$_GET["sched"]." order by due_date desc, ava_date desc";
 
 $result = mysql_query($sql);
 
@@ -81,8 +84,16 @@ while($row = mysql_fetch_row($result))
 {
 	$html .= '<tr>';
 
-	// assignment open?
-	if($row[8] > 0) { $html .= "<td><img src=gfx/bullet_delete.png>"; } else { $html .= "<td><img src=gfx/bullet_add.png>"; }
+	// assignment started?
+	if($row[11] < 0){
+		$html .= "<td><img src=gfx/bullet_black.png>";
+		$started = false;
+	} else {
+		// assignment open?
+		if($row[8] > 0 || $row[10] < 0) { $html .= "<td><img src=gfx/bullet_delete.png>"; } else { $html .= "<td><img src=gfx/bullet_add.png>"; }
+		$started = true;
+	}
+
 
 	// assignment graded?
 	if($row[12]) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
@@ -91,7 +102,14 @@ while($row = mysql_fetch_row($result))
 	$html .= $file_count."</td>";
 	$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
-	$html .= '<td>'.absHumanTiming($row[6]).'</td>';
+
+	if($started) {
+		$html .= '<td>'.absHumanTiming($row[6]).'</td>';
+	} else {
+		$html .= '<td>'.absHumanTiming($row[5]).'</td>';
+	}
+
+	//$html .= '<td>'.absHumanTiming($row[6]).'</td>';
 	if($role != 0 ) { $html .= '<td><a href=help_me.php?sched='.$_GET["sched"].'>'.$help_stat.'</a></td>'; }
 	$html .= '</tr>';
 }
@@ -166,7 +184,8 @@ if($_GET["user"] == '' ) {
 
 		// get all comments for this particular file
 		//$sql = "select filecom_id, file_id, line_no, user_id, txt, timeposted from filecom where file_id=".$row[0]." order by line_no, timeposted";
-		$sql = 'select line_no, filecom.user_id, name,  timeposted, txt, role from filecom, users where (users.user_id = filecom.user_id) and file_id='.$row[1].' order by line_no, timeposted';
+		$sql = 'select line_no, filecom.user_id, name,  timeposted, txt, role from filecom, users 
+			where (users.user_id = filecom.user_id) and file_id='.$row[1].' order by line_no, timeposted';
 
 		//echo $sql;
 
@@ -187,7 +206,7 @@ if($_GET["user"] == '' ) {
 		if (!$result2) { die("SQL ERROR: File Details"); }
 		while($row2 = mysql_fetch_array($result2)) // moving through contents of each specific file
 		{
-			//echo $sql;
+			//echo sql;
 
 			//echo $row2['file_name'];
 			$code = $row2['file_1'];
@@ -242,8 +261,11 @@ if($_GET["user"] == '' ) {
 			}
 
 		// header for file
+
+		if(file_late($row2['file_id'])) { $late_indicator  = '<div class="file_head_late">'; } else { $late_indicator  = '<div class="file_head">'; }
+
 		$files .= '<div class="file">
-			<div class="file_head"><img src="gfx/page_white_gear.png">
+			'.$late_indicator.'<img src="gfx/page_white_gear.png">
 				<span class="fname"><a href=file_raw.php?file_id='.$row2['file_id'].'>'.$row2['file_name'].'</a></span>
 				<span class="fsize">'.$row2['file_size'].'B</span>
 				<span class="fdate">'.$row2['time_post'].'</span>
@@ -335,12 +357,15 @@ if(isset($_GET["user"])) {
 
 $sql = 'select count(*) from schedule where ava_date < NOW() and due_date > NOW() and sched_id ='.$_GET["sched"];
 
+//echo $sql;
+
 $result = mysql_query($sql);
 
 $row = mysql_fetch_row($result);
 
 if($row[0] == 1) { // assignment is open
-	if($role == 0 && $user_id_role == 0 && isset($_GET["user"])) {
+
+	if($role == 0 && $user_id_role == 0 && $user_data_sent) { // my role is root, student role is root and a user has been sent...
 		$upload_form = '<div class="comment_box">Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
 		<input type="file" name="file" size="40"><br><br>
 		<input name="user" type="hidden" value='.$_GET["user"].'>
@@ -355,8 +380,25 @@ if($row[0] == 1) { // assignment is open
 	} else {
 		$upload_form = '';
 	}
-} else { // assignment is closed
-	$upload_form = '';
+
+} else { // assignment is closed - show as a red upload box
+	if($role == 0 && $user_id_role == 0 && $user_data_sent) {
+		$upload_form = '<div class="comment_box_closed"><div class="comment_box_closed_message">-20 POINTS</div>
+		Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
+		<input type="file" name="file" size="40"><br><br>
+		<input name="user" type="hidden" value='.$_GET["user"].'>
+		<input name="action" type="hidden" value="ret">
+		<input type="submit" name="submit" value="Submit"/>
+		</form></div>';
+	} else if($role != 0) {
+		$upload_form = '<div class="comment_box_closed"><div class="comment_box_closed_message">-20 POINTS</div>
+			Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
+			<input type="file" name="file" size="40"><br><br>
+			<input type="submit" name="submit" value="Submit"/>
+			</form></div>';
+	} else {
+		$upload_form = '';
+	}
 }
 
 /* generate next and back buttons */
@@ -372,7 +414,7 @@ if($role == 0) {
 
 	//echo $sql;
 
-	if ($row['user_id']) { $back_button = '<a href=detail_root.php?sched='.$_GET["sched"].'&user='.$row['user_id'].'><img src="gfx/resultset_previous.png" style="border-style: none"></a>'; } else { $back_button = '<img src="gfx/resultset_previous_disabled.png" style="border-style: none">'; }
+	if ($row['name']) { $back_button = '<a href=detail_root.php?sched='.$_GET["sched"].'&user='.$row['user_id'].'><img src="gfx/resultset_previous.png" style="border-style: none"></a>'; } else { $back_button = '<img src="gfx/resultset_previous_disabled.png" style="border-style: none">'; }
 
 	$sql = 'select enrollment.user_id, name  from schedule, enrollment, users where (schedule.class_id = enrollment.class_id) and (enrollment.user_id = users.user_id) and sched_id = '.$_GET["sched"].' and name > "'.$student_user_name.'" order by name, email, user_id limit 1';
 
@@ -382,7 +424,7 @@ if($role == 0) {
 
 	//echo "<br>".$sql;
 
-	if ($row['user_id']) { $next_button = '<a href=detail_root.php?sched='.$_GET["sched"].'&user='.$row['user_id'].'><img src="gfx/resultset_next.png" style="border-style: none"></a>'; } else { $next_button = '<img src="gfx/resultset_next_disabled.png" style="border-style: none">'; }
+	if ($row['name']) { $next_button = '<a href=detail_root.php?sched='.$_GET["sched"].'&user='.$row['user_id'].'><img src="gfx/resultset_next.png" style="border-style: none"></a>'; } else { $next_button = '<img src="gfx/resultset_next_disabled.png" style="border-style: none">'; }
 
 }
 
