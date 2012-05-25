@@ -20,9 +20,9 @@ CREATE TABLE schedule (
 	sched_id int NOT NULL AUTO_INCREMENT,
 	class_id int NOT NULL,				# class section number
 	assign_type int NOT NULL,			# type of assignment
-	title varchar(265) NOT NULL,			# title of assignment
-	chapter int NOT NULL,				# chapter number
-	section_id int NOT NULL,			# section number
+	title varchar(256) NOT NULL,			# title of assignment
+	chapter varchar(256) NOT NULL,				# chapter number
+	section_id varchar(256) NOT NULL,			# section number
 	ava_date  DATETIME NOT NULL,			# date for opening of assignment
 	due_date DATETIME NOT NULL,			# due date for assignment
 	PRIMARY KEY (sched_id)

@@ -9,8 +9,7 @@ if($_GET["comment"] == "") { die("Comment Must Not Be Empty"); }
 
 $sql = 'insert into comments values("", '.$user_id.', '.$_GET["sched"].', "'.$_GET["comment"].'", NOW())';
 
-echo $sql;
-
+//echo $sql;
 
 $result = mysql_query($sql);
 

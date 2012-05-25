@@ -1,0 +1,257 @@
+body {
+	padding: 10px;
+	margin: 10px;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+}
+
+#login {
+	position: absolute;
+	top: 0px;
+	right: 10px;
+	color: #fff;
+}
+
+#top_bar {
+	position: absolute;
+	background-color:#004890;
+	color: #fff;
+	border-bottom: 1px solid #000;
+	padding: 3px;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+}
+
+#digitalsig {
+	background-color: #ccc;
+	border: 2px solid #000;
+	padding: 10px;
+	margin: 20px;
+}
+
+.input {
+	background-color: #ddf;
+	border: 1px solid #bbb;
+	padding: 10px;
+	margin: 20px;
+}
+
+.input_form {
+	text-align: right;
+	padding-right: 20px;
+}
+
+.input_error {
+	color: #d00;
+}
+
+.input_name {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.input_description {
+	font-family: sans-serif;
+	font-size: 14px;
+	color: #555;
+}
+
+.left {
+	width: 49%;
+	float: left;
+	clear: both;
+}
+
+.right {
+	width: 49%;
+	float: right;
+}
+
+.spacer {
+	padding-left: 10px;
+	padding-right: 10px;
+	display: inline;
+}
+
+.error {
+	color: #F00;
+	padding-left: 10px;
+	padding-right: 10px;
+	display:inline;
+}
+
+
+.footer {
+	text-align: center;
+	font-family: sans-serif;
+	font-size: 10px;
+	color: #444;
+	margin: 15px;
+}
+
+#left {
+	border: 1px solid #f00;
+	width: 49%;
+}
+
+#right {
+	border: 1px solid #00f;
+	float:right;
+	width: 49%;
+}
+
+#approve{
+	color: #070;
+}
+
+#reject{
+	color:#c00;
+}
+
+#nostart{
+	color: #aaa;
+}
+
+    /* TABLES GO HERE */
+.striped   {
+	background-color: #fff;
+	border-color: #999;
+	border-width: 1px;
+	border-style: solid;
+	border-collapse: collapse;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	margin: 0px 0px 0px 0px;  /* top right bottom left */
+	padding: 1px 5px 1px 5px; /* top right bottom left */
+	width: 100%;
+}
+
+.striped thead td {
+	color: #bbb;
+	background-color: #fff;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #999;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #999;
+	margin: 0px 0px 0px 0px;  /* top right bottom left */
+	padding: 2px 0px 2px 5px; /* top right bottom left */
+}
+
+.striped tbody td {
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #ddd;
+	margin: 0px 0px 0px 0px;  /* top right bottom left */
+	padding: 2px 0px 2px 5px; /* top right bottom left */
+}
+
+.striped a {
+	display: block;   /* force all table contents to become a link */
+}
+
+/*
+    .striped tr:hover a, tr.odd:hover td, tr.even:hover td {
+      background-color: #aaa;
+      color: #000;
+      }
+*/
+
+
+table tr td{
+/* 	border: 2px solid #f00; */
+	padding: 0px;
+	margin: 0px;
+}
+
+table thead {
+	background-color: #ccc;
+	color: #000;
+	/* border-color: 2px solid #f00; */
+}
+
+table thead tr {
+	background-color: #ccc;
+	color: #000;
+	/*border-color: #000 2px solid ; */
+}
+
+table tbody tr.even td {
+	background-color: #eee;
+}
+
+table tbody tr.odd  td {
+	background-color: #fff;
+}
+
+table tbody tr.head  td {
+	background-color: #004890;
+	color: #fff;
+}
+
+/*
+#block table {
+	background-color: #fff;
+	border-color: #000;
+	border-width: 1px;
+	border-style: solid;
+	border-collapse: collapse;
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	margin: 10px 0px 0px 0px;
+	padding: 1px 5px 1px 5px;
+	}
+
+#block table thead td {
+	cursor: pointer;
+	font-weight: bold;
+	background-color: #bbd;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #000;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #000;
+	margin: 0px 0px 0px 0px;
+	padding: 2px 5px 2px 5px;
+	white-space: nowrap;
+	}
+
+#block table tbody td {
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #000;
+	margin: 0px 0px 0px 0px;
+	padding: 2px 5px 2px 5px;
+	white-space: nowrap;
+	}
+
+#block table tbody tr:hover, table tbody tr.odd:hover {
+	background-color: #ccc;
+	}
+
+#block tr:hover a {
+	background-color: #ccc;
+	color: #000;
+	}
+
+#block tr.odd:hover td, tr.even:hover td {
+	background-color: #bcc5ff;
+	}
+
+#block table tbody tr.even td {
+	background-color: #ddd;
+	}
+
+#block table tbody tr.odd  td {
+	background-color: #fff;
+	}
+
+#block table tbody tr.tend  td {
+	background-color: #000;
+	color: #fff;
+	}
+*/

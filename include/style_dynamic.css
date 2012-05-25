@@ -1,0 +1,90 @@
+#digitalsig {
+  background-color: #ccc;
+  border: 2px solid #000;
+  margin: 10px;
+  padding: 10px;
+  margin: 20px;
+}
+
+.input {
+  border: 1px dotted #ccc;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  position: absolute;
+}
+
+.spacer {
+  padding-left: 10px;
+  padding-right: 10px;
+
+}
+
+.error {
+  color: #F00;
+  padding-left: 10px;
+  padding-right: 10px;
+
+}
+
+body {
+	margin:10px 10px 0px 10px;
+	padding:0px;
+	}
+
+#leftcontent {
+	position: absolute;
+	left:10px;
+	top:50px;
+	width:150px;
+	background:#fff;
+	}
+
+#centercontent {
+	background:#fff;
+	margin-left: 199px;
+	margin-right:199px;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	margin-left: 151px;
+	margin-right:151px;
+	}
+html>body #centercontent {
+	margin-left: 151px;
+	margin-right:151px;
+	}
+
+#rightcontent {
+	position: absolute;
+	right:10px;
+	top:50px;
+	width:150px;
+	background:#fff;
+	}
+
+#banner {
+	background:#fff;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	}
+html>body #banner {
+	}
+
+p,h1,pre {
+	margin:0px 10px 10px 10px;
+	}
+
+h1 {
+	font-size:14px;
+	padding-top:10px;
+	}
+
+#banner h1 {
+	font-size:14px;
+	padding:10px 10px 0px 10px;
+	margin:0px;
+	}
+
+#rightcontent p {
+	font-size:10px
+	}
