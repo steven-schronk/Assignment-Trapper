@@ -20,13 +20,19 @@ if($role == 0) { // faculty comment to student
 	$sql = 'insert into comments values("", '.$user_id.', '.$_GET["sched"].', NULL,'.$role.', "'.$_GET["comment"].'", NOW())';
 }
 
-echo $sql;
+//echo $sql;
 
 $result = mysql_query($sql);
 
 if (!$result) { die("SQL ERROR"); } else {
-	//echo "Data Posted Sucessfully";
-	echo '<html><meta http-equiv="refresh" content="0; detail.php?sched='.$_GET["sched"].'" /></html>';
+
+echo "Data Posted Sucessfully<br><br>";
+
+echo 'Click <a href=detail.php?sched='.$_GET["sched"].'>Here</a> To Return to Assignment Details';
+
+
+//echo '<html><meta http-equiv="refresh" content="0; detail.php?sched='.$_GET["sched"].'" /></html>';
+
 }
 
 

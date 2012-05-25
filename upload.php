@@ -78,6 +78,13 @@ $header .= "--".$uid."--";
 mail($user_email, "File Received", "", $header);
 
 /* move to classes page */
-echo '<html><meta http-equiv="refresh" content="0; detail.php?sched='.$_GET["sched"].'" />Data Posted Sucessfully</html>';
+
+
+echo "Data Posted Sucessfully<br><br>";
+
+echo 'Click <a href=detail.php?sched='.$_GET["sched"].'>Here</a> To Return to Assignment Details';
+
+
+//echo '<html><meta http-equiv="refresh" content="0; detail.php?sched='.$_GET["sched"].'" />Data Posted Sucessfully</html>';
 
 ?> 

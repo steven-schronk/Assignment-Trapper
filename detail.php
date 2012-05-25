@@ -2,6 +2,8 @@
 
 include_once("auth.php");
 
+include_once("time.php");
+
 if (!$_GET["sched"]) { die("No Assignment Requested"); }
 
 $_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
@@ -24,7 +26,7 @@ while($row = mysql_fetch_row($result))
 	if($row[8] > 0) { $html .= "<td><img src=gfx/bullet_delete.png></td>"; } else { $html .= "<td><img src=gfx/bullet_add.png></td>"; }
 
 	$html .= '<td><a href="detail.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
-	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
+	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td><td>'.absHumanTiming($row[6]).'</td>';
 	$html .= '</tr>';
 }
 
@@ -100,6 +102,7 @@ while($row = mysql_fetch_row($result))
 			<div class="file_head"><img src="gfx/page_white_gear.png">
 				<span class="fname">'.$row2['file_name'].'</span>
 				<span class="fsize">'.$row2['file_size'].'B</span>
+				<span class="fdate">'.absHumanTiming($row2['time_post']).'</span>
 				<span class="fdate">'.$row2['time_post'].'</span>
 				<span class="fraw"><button>Raw</button></span>
 			</div>
@@ -188,6 +191,8 @@ while($row = mysql_fetch_array($result))
 		$comm .= '<span class="com_name">'.$row['facname'].'</span>';
 	}
 
+	$comm .= '<span class="com_date_human">'.absHumanTiming($row['timeposted']).'</span></div>';
+
 	$comm .= '<span class="com_date">'.$row['timeposted'].'</span></div>
 	<div class="com_body"><pre>
 '.$row['txt'].'
@@ -202,7 +207,7 @@ while($row = mysql_fetch_array($result))
 
 <table class="gridtable">
 	<tr>
-		<th>Chapter</th><th>Title</th><th>Section</th><th>Type</th><th>Avalaible</th><th>Due</th><th>Submission</th>
+		<th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th><th>Avalable Date</th><th>Due Date</th><th>Human Time</th>
 	</tr>
 
 	<?php echo $html; ?>

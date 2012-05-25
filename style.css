@@ -32,18 +32,19 @@ table.gridtable td {
 .highlight{background:#fff;}
 .line_numbers{background-color:#ececec;color:#aaa;padding:1em .5em;border-right:1px solid #ddd;text-align:right;}
 
-.file {border:1px solid #ddd; }
-.file_head {  padding-left: 15px; padding-top: 3px; border-bottom: 1px solid #ddd; background-image: url(gfx/bg_green.png); background-repeat: repeat-x; border-top: 2px solid #aaa; }
+/* .file {border:1px solid #ddd; } */
+.file_head {  padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: ccffc1; }
 
-.comment {border:1px solid #ddd; width: 95%; margin-left: 10px; margin-right: 10px;}
+/*.comment {border:1px solid #ddd; width: 95%; margin-left: 10px; margin-right: 10px;}*/
 .com_body { padding-left: 15px; }
-.com_date { position: relative; left: 200px; top: -8px; color: #888;}
+.com_date_human { position: relative; left: 100px; top: -8px; color: #888;}
+.com_date { position: relative; left: 400px; top: -28px; color: #888;}
 .com_name { position: relative; left: 15px; top: -8px;  }
-.com_head { padding-left: 15px; padding-top: 3px; border-bottom: 1px solid #ddd; background-image: url(gfx/bg_blue.png); background-repeat: repeat-x; }
+.com_head { padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #c1d5ff; }
 
 .fname { position: relative; left: 15px; top: -8px;  }
 .fsize { position: relative;  left: 40px; top: -8px;  color: #888; }
-.fdate { position: relative;  left: 100px; top: -8px;  color: #888; }
+.fdate { position: relative;  left: 100px; top: -8px;  color: #888; padding-left: 25px; }
 .fedit{ position: relative;  left: 240px; top: -8px;  }
 .fraw{ position: relative;  left: 340px; top: -8px;  }
 

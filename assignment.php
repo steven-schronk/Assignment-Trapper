@@ -1,40 +1,8 @@
 <?php
 
-function humanTiming ($time)
-{
-    $time = time() - $time; // to get the time since that moment
-
-    $tokens = array (
-        31536000 => 'year',
-        2592000 => 'month',
-        604800 => 'week',
-        86400 => 'day',
-        3600 => 'hour',
-        60 => 'minute',
-        1 => 'second'
-    );
-
-    foreach ($tokens as $unit => $text) {
-        if ($time < $unit) continue;
-        $numberOfUnits = floor($time / $unit);
-        return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'');
-    }
-}
-
-function absHumanTiming($time)
-{
-	$now_date = date("U", time());
-	echo $now_date."->";
-
-	$time = strtotime($time);
-	echo $time."->";
-	$out = "";
-	if($now_date > $time ) { echo humanTiming($time)." ago<br>"; }
-	else {  echo humanTiming($time - $now_date)." to go<br>"; }
-	return $out;
-}
-
 include_once("auth.php");
+
+include_once("time.php");
 
 if(!isset($_GET["class"])) { die("No Class ID Sent"); }
 
@@ -68,9 +36,6 @@ if (!$result) { die("SQL ERROR"); }
 $i = 1;
 while($row = mysql_fetch_row($result))
 {
-
-	echo absHumanTiming($row[11]);
-
 	$html .= '<tr><td>'.$i.'</td>';
 	//$html .= '<tr><td>'.$row[10].'</td>';
 
@@ -83,6 +48,8 @@ while($row = mysql_fetch_row($result))
 	}
 
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
+
+	$html .= '<td>'.absHumanTiming($row[11]).'</td>';
 
 	if($role==0) { $html .= '<td><a href="assignment_add.php?sched='.$row[7].'&action=edit">Edit</a></td>'; }
 
@@ -97,7 +64,7 @@ while($row = mysql_fetch_row($result))
 <table class="gridtable">
 	<tr>
 		
-			<th>#</th><th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th><th>Avalaible Date</th><th>Due Date</th>
+			<th>#</th><th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th><th>Avalaible Date</th><th>Due Date</th><th>Human Time</th>
 		<?php if($role==0) { echo '<th>Update</th>'; } ?>
 	</tr>
 	<?php echo $html; ?>
