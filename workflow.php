@@ -12,6 +12,7 @@ if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This 
 
 <div class="col2">
 	<h3><img src="gfx/report.png">Assignments:</h3>
+		<a href="index.php">Comments From Students</a><br>
 		<a href="workflow_comments.php">Most Recent Comments</a><br>
 		<a href="workflow_ungraded.php">Assignments Ready For Grading</a>
 </div>

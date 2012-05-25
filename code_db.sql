@@ -28,6 +28,17 @@ CREATE TABLE comments (
 	PRIMARY KEY (comment_id)
 );
 
+CREATE TABLE sched_details (
+	detail_id int NOT NULL AUTO_INCREMENT,
+	sched_id int NOT NULL,
+	user_id int NOT NULL,
+	user_viewed int,				# comments have been viewed by user
+	fac_viewed int,					# comments have been viewed by faculty
+	help_me int,					# students can ask for help on thier assignments
+	timeposted timestamp NOT NULL,			# time comment was posted
+	PRIMARY KEY (detail_id)
+);
+
 CREATE TABLE schedule (
 	sched_id int NOT NULL AUTO_INCREMENT,
 	class_id int NOT NULL,				# class section number

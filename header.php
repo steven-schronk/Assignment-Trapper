@@ -7,6 +7,7 @@ if($user_id != '') {
 		$menu = '<div class="menu">
 			<ul>
         			<li><a href="classes.php">Classes</a></li>
+				<li><a href="index.php">Messages</a></li>
 			        <li><a href="manage.php">Manage Accounts</a></li>
         			<li><a href="workflow.php">Workflows</a></li>
 				<li><a href="#" onClick="logout();">'.$_COOKIE["username"].'</a></li>
@@ -30,6 +31,7 @@ if($user_id != '') {
 ?>
 
 <html>
+<head>
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="EXPIRES" CONTENT="<?php echo gmdate('D, d M Y H:i:s') . ' GMT' ?>">
@@ -47,7 +49,7 @@ if($user_id != '') {
 <script type="text/javascript" src="include/position.js"></script>
 <script type="text/javascript" src="include/calendar-en.js"></script>
 <script type="text/javascript" src="include/calendar-setup.js"></script>
-
+</head>
 <body onload="sh_highlightDocument();">
 
 <h2><img src="gfx/bricks.png">Assignment Trapper</h2>

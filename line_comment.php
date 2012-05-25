@@ -19,6 +19,15 @@ $comment = mysql_real_escape_string($comment);
 
 //TODO: Verify that this file belongs to user if role not root...
 
+/*
+if($role == 0) { // faculty comment to student
+	detail_viewed_update($_GET["user"], $_GET["sched"], 0, "std");
+	detail_viewed_update($_GET["user"], $_GET["sched"], 1, "fac");
+} else { // student comment to faculty
+	detail_viewed_update($_GET["user"], $_GET["sched"], 1, "std");
+	detail_viewed_update($_GET["user"], $_GET["sched"], 0, "fac");
+}
+*/
 
 // insert comment contents into DB
 $sql = 'insert into filecom values ("", '.$_GET["file_id"].','.$_GET["line_num"].','.$user_id.',"'.$comment.'",NOW())';

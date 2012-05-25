@@ -21,6 +21,27 @@ $row = mysql_fetch_row($result);
 
 if($row[0] == 1) { $submission = 'Open'; } else { $submission = 'Closed'; }
 
+
+/* get help status for this assignment */
+
+if($role == 0) {
+	$sql = 'select help_me from sched_details where sched_id ='.$_GET["sched"].' and user_id = '.$_GET["user"];
+} else {
+	$sql = 'select help_me from sched_details where sched_id ='.$_GET["sched"].' and user_id = '.$user_id;
+}
+
+$result = mysql_query($sql);
+
+$row = mysql_fetch_row($result);
+
+if($row[0] == 1) {
+	$help_stat = 'Disable';
+	$help_icon = '<img src=gfx/flag_red.png>';
+} else {
+	$help_stat = 'Enable';
+	$help_icon = '<img src=gfx/flag_white.png>';
+}
+
 /* get assignment details */
 $html = "";
 
@@ -40,12 +61,14 @@ while($row = mysql_fetch_row($result))
 	if($row[8] > 0) { $html .= "<td><img src=gfx/bullet_delete.png>"; } else { $html .= "<td><img src=gfx/bullet_add.png>"; }
 
 	// assignment graded?
-	if($row[12]) { $html .= "<img src=gfx/bullet_disk.png></td>"; } else { $html .= "<img src=gfx/bullet_wrench.png></td>"; }
+	if($row[12]) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
 
-
+	$html .= $help_icon."</td>";
 	$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
-	$html .= '<td>'.absHumanTiming($row[6]).'</td></tr>';
+	$html .= '<td>'.absHumanTiming($row[6]).'</td>';
+	if($role != 0 ) { $html .= '<td><a href=help_me.php?sched='.$_GET["sched"].'>'.$help_stat.'</a></td>'; }
+	$html .= '</tr>';
 }
 
 /* get class this assignment is from for breadcrumbs */
@@ -347,6 +370,8 @@ if($role == 0) {
 <table class="gridtable">
 	<tr>
 		<th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th><th>Avalable Date</th><th>Due Date</th><th>Human Time</th>
+
+		<?php if($role != 0 ) { echo "<th>Help</th>"; } ?>
 	</tr>
 
 	<?php echo $html; ?>

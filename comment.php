@@ -1,6 +1,8 @@
 <?php
 
 include_once("auth.php");
+include_once("detail_lib.php");
+
 //include_once("header.php");
 
 if (!$_GET["comment"]) { die("No Comment Sent");     }
@@ -16,8 +18,12 @@ if($role == 0 && !$_GET["user"]) {  die("No User ID Sent"); }
 if($_GET["comment"] == "") { die("Comment Must Not Be Empty"); }
 
 if($role == 0) { // faculty comment to student
+	detail_viewed_update($_GET["user"], $_GET["sched"], 0, "std");
+	detail_viewed_update($_GET["user"], $_GET["sched"], 1, "fac");
 	$sql = 'insert into comments values("", '.$_GET["user"].', '.$_GET["sched"].','.$user_id.','.$role.', "'.$_GET["comment"].'", NOW())';
 } else { // student comment to faculty
+	detail_viewed_update($_GET["user"], $_GET["sched"], 1, "std");
+	detail_viewed_update($_GET["user"], $_GET["sched"], 0, "fac");
 	$sql = 'insert into comments values("", '.$user_id.', '.$_GET["sched"].', NULL,'.$role.', "'.$_GET["comment"].'", NOW())';
 }
 
