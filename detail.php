@@ -64,8 +64,21 @@ while($row = mysql_fetch_row($result))
 {
 	$code = $row[5];
 	/* escape open and close symbols <> */
-	$code = str_replace("<", "&lt;", $code);
-	$code = str_replace(">", "&gt;", $code);
+	/*
+		< = &lt;
+		> = &gt;
+		/ = &#47;  	
+		] = &#93;
+		[ = &#91;
+		" = &#34;
+		' = &#39;
+*/
+
+	//$code = str_replace("<", "&lt;", $code);
+	//$code = str_replace(">", "&gt;", $code);
+	//$code = str_replace("\t", "TAB", $code);
+
+	$code = htmlspecialchars($code);
 
 	/* add line numbers to code */
 	$lines = explode("\n", $code);
@@ -73,8 +86,9 @@ while($row = mysql_fetch_row($result))
 	$i = 1; $code = "";
 	foreach($lines AS $line)
 	{
-		$code .= "\n".$i."|";
-		$code .= $line;
+		//$code .= "\n".$i."|";
+		if($line == '') { $code .= "<div id='line' class='line'><span class='line_num'>".$i."</span><pre id='line_dat' class='line_dat'> </pre></div>\n";
+		} else {         $code .= "<div id='line' class='line'><span class='line_num'>".$i."</span><pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
 		$i++;
 	}
 
@@ -87,10 +101,10 @@ while($row = mysql_fetch_row($result))
 			<span class="fraw"><button>Raw</button></span>-->
 		</div>
 		<div class="highlight">
-			<pre class="sh_cpp">
+			<div>
 '.$code.'
 
-			</pre>
+			</div>
 		</div>
 	</div>';
 }

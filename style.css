@@ -51,9 +51,6 @@ table.gridtable td {
 
 .cmnt_count { padding: 20px; }
 
-
-
-
 #top_bar {
 	position: absolute;
 	background-color:#004890;
@@ -93,3 +90,18 @@ table.gridtable td {
 	color: #555;
 }
 
+#line:hover {
+	background-color: #ff0;
+}
+
+.line_add {
+	float: left;
+}
+
+.line_num {
+	float: left;
+	background-color: #ddd;
+	text-align: left;
+	color: #aaa;
+	width: 40px;
+}
