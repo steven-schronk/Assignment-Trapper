@@ -39,7 +39,7 @@ $row = mysql_fetch_row($result);
 if($row[0] == 1) { $submission = ''; } else { $submission = 'disabled=true'; }
 
 
-/* get class this assignment is from for breadcrumbs */
+/* get class this assignment ID from for breadcrumbs */
 $sql = 'select schedule.class_id, class.class_name from schedule, class where (schedule.class_id = class.class_id) and schedule.sched_id = '.$_GET["sched"];
 
 //echo $sql;
@@ -52,11 +52,12 @@ $row = mysql_fetch_array($result);
 
 $breadcrumb = '<a href=assignment.php?class='.$row['class_id'].'>'.$row['class_name'].'</a>&nbsp;';
 
-/* get latest versions of each file for this assignment */
+/* get latest versions of each file for this assignment ---------------------------------------------------------------------*/
 
-// select distinct file_name, max(file_id) from files group by file_name;
 
-$sql = 'select max(file_id), time_post, file_name, file_size, time_post, file_1 from files where user_id='.$user_id.' and sched_id='.$_GET["sched"].' group by file_name';
+// first get list of file_ids that are distinct names and the latest versions
+
+$sql = 'select distinct file_name, max(file_id) from files where user_id='.$user_id.' and sched_id='.$_GET["sched"].' group by file_name order by file_name';
 
 //echo $sql;
 
@@ -64,9 +65,56 @@ $result = mysql_query($sql);
 
 if (!$result) { die("SQL ERROR: File List"); }
 
+// store these file_id in an array
+$i = 0;
+
 while($row = mysql_fetch_row($result))
 {
-	/* get latest versions of each file for this assignment */
+	$sql = 'select file_id, time_post, file_name, file_size, time_post, file_1 from files where file_id ='.$row[1];
+
+	//echo $sql;
+
+	$result2 = mysql_query($sql);
+	if (!$result2) { die("SQL ERROR: File Details"); }
+	while($row2 = mysql_fetch_array($result2))
+	{
+		//echo $sql;
+		$code = $row2['file_1'];
+		
+		/* escape open and close symbols <> */
+		$code = str_replace("<", "&lt;", $code);
+		$code = str_replace(">", "&gt;", $code);
+
+		/* add line numbers to code */
+		$lines = explode("\n", $code);
+
+		$i = 1; $code = "";
+		foreach($lines AS $line)
+		{
+			$code .= "\n".$i."|";
+			$code .= $line;
+			$i++;
+		}
+
+		$files .= '<div class="file">
+			<div class="file_head"><img src="gfx/page_white_gear.png">
+				<span class="fname">'.$row2['file_name'].'</span>
+				<span class="fsize">'.$row2['file_size'].'B</span>
+				<span class="fdate">'.$row2['time_post'].'</span>
+				<span class="fraw"><button>Raw</button></span>
+			</div>
+			<div class="highlight">
+				<pre class="sh_cpp">
+'.$code.'
+
+				</pre>
+			</div>
+		</div><br>';
+	}
+}
+
+/*
+	/* get latest versions of each file for this assignment
 
 	//$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$_GET["user"].' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
 
@@ -81,11 +129,11 @@ while($row = mysql_fetch_row($result))
 	while($row = mysql_fetch_row($result))
 	{
 		$code = $row[5];
-		/* escape open and close symbols <> */
+		/* escape open and close symbols <> 
 		$code = str_replace("<", "&lt;", $code);
 		$code = str_replace(">", "&gt;", $code);
 
-		/* add line numbers to code */
+		/* add line numbers to code 
 		$lines = explode("\n", $code);
 
 		$i = 1; $code = "";
@@ -113,6 +161,8 @@ while($row = mysql_fetch_row($result))
 	}
 
 }
+
+*/
 
 /* get comments for this assignment */
 

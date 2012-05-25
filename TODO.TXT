@@ -1,8 +1,7 @@
+loops when posting new assignments from detail.php
 change password does not work in Internet Explorer
 cannot use "enter" key for login credentials form
-files not listing in correct order on details page
-Status incorrect on assignment.php page when assignment has not opened yet.
-
+due dates and posting dates in more readable format
 
 cannot recover password for students
 Line numbers not aligning properly.
