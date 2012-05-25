@@ -1,0 +1,5 @@
+Line numbers no aligning properly.
+Improve look and feel of tables in general.
+Students can see all submissions to assignments.
+RSS feeds for new comments.
+
