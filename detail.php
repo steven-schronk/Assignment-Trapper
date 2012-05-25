@@ -64,81 +64,52 @@ if (!$result) { die("SQL ERROR: File List"); }
 
 while($row = mysql_fetch_row($result))
 {
-	// get all comments for this particular file
-	$sql = "select filecom_id, file_id, line_no, user_id, txt, timeposted from filecom where file_id=".$row[0]." order by line_no, timeposted";
-	
-	$filecom = mysql_query($sql);
-	if (!$filecom) { die("SQL ERROR: File Comments"); }
+	/* get latest versions of each file for this assignment */
 
-	// only get first line comment
-	$filecoms = mysql_fetch_array($filecom);
+	//$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$_GET["user"].' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
 
-	// TODO: COMPLETE GETTING FILE COMMENTS
+	$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$user_id.' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
 
-	$code = $row[5];
-	/* escape open and close symbols <> */
-	/*
-		< = &lt;
-		> = &gt;
-		/ = &#47;  	
-		] = &#93;
-		[ = &#91;
-		" = &#34;
-		' = &#39;
-*/
+	//echo $sql;
 
-	//$code = str_replace("<", "&lt;", $code);
-	//$code = str_replace(">", "&gt;", $code);
-	//$code = str_replace("\t", "TAB", $code);
+	$result = mysql_query($sql);
 
-	$code = htmlspecialchars($code);
+	if (!$result) { die("SQL ERROR: Get File"); }
 
-	/* add line numbers to code */
-	$lines = explode("\n", $code);
-
-	// lines of code in file
-	$i = 1; $code = "";
-	foreach($lines AS $line)
+	while($row = mysql_fetch_row($result))
 	{
-		// we only get line comments as they are needed
-		if($filecoms['line_no'] == $i) {
-			// comment lies in here if present and empty form hides here if not...
-			//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
-			$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
-			$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
-			$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;";
-			$code .= "<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";
-		} else {
-			// comment lies in here if present and empty form hides here if not...
-			//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
-			$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
-			$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
-			$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;";
-			$code .= "<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";			
+		$code = $row[5];
+		/* escape open and close symbols <> */
+		$code = str_replace("<", "&lt;", $code);
+		$code = str_replace(">", "&gt;", $code);
+
+		/* add line numbers to code */
+		$lines = explode("\n", $code);
+
+		$i = 1; $code = "";
+		foreach($lines AS $line)
+		{
+			$code .= "\n".$i."|";
+			$code .= $line;
+			$i++;
 		}
 
-		$code .= "<div id='line' onClick='line_comment(\"line_com_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
-		if($line == '') { $code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";
-		} else {          $code .= "<pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
-		$i++;
+		$files .= '<div class="file">
+			<div class="file_head"><img src="gfx/page_white_gear.png">
+				<span class="fname">'.$row[2].'</span>
+				<span class="fsize">'.$row[3].'B</span>
+				<span class="fdate">'.$row[4].'</span>
+				<span class="fraw"><button>Raw</button></span>
+			</div>
+			<div class="highlight">
+				<pre class="sh_cpp">
+	'.$code.'
+
+				</pre>
+			</div>
+		</div>';
 	}
 
-	// header for file
-	$files .= '<div class="file">
-		<div class="file_head"><img src="gfx/page_white_gear.png">
-			<span class="fname">'.$row[2].'</span>
-			<span class="fsize">'.$row[3].'B</span>
-			<span class="fdate">'.$row[4].'</span>
-			<!-- <span class="fedit"><button>Edit</button></span>
-			<span class="fraw"><button>Raw</button></span>-->
-		</div>
-		<div class="highlight">
-			<div>
-'.$code.'
-
-			</div>
-		</div>
-	</div><br><br>';
 }
 
 /* get comments for this assignment */

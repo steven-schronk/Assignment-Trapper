@@ -54,7 +54,7 @@ $row = mysql_fetch_array($result);
 $breadcrumb = '<a href=assignment.php?class='.$row['class_id'].'>'.$row['class_name'].'</a>&nbsp;';
 
 if($_GET["user"] == '' ) { 
-	/* get class this schedule is in */
+	/* get class id for this schedule id */
 
 	$sql = 'select class_id from schedule where sched_id='.$_GET["sched"];
 
@@ -67,14 +67,6 @@ if($_GET["user"] == '' ) {
 	$class_id = $row[0];
 
 	/* get list of students that are in this class and generate a list of them */
-
-	//select users.name, users.user_id from users, enrollment where (enrollment.user_id = users.user_id) and enrollment.class_id = 2 order by name;
-
-	// trying to do an outer join to get users with no submissions
-	//select users.name, users.user_id, count(file_id) from enrollment, files LEFT JOIN users on (files.user_id = users.user_id) where  (enrollment.user_id = users.user_id) and enrollment.class_id = 2 order by name
-
-	//select users.name, users.user_id, count(file_id) from users, files LEFT JOIN enrollment on (enrollment.user_id = files.user_id) where (files.user_id = users.user_id) and enrollment.class_id = 2 group by users.name order by name;
-
 	$sql = 'select users.name, users.email, users.user_id, role from users, enrollment where (users.user_id = enrollment.user_id) and enrollment.class_id='.$class_id.' order by users.name';
 
 	//echo $sql;
@@ -99,47 +91,100 @@ if($_GET["user"] == '' ) {
 } else {
 
 	/* get latest versions of each file for this assignment */
-
 	$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$_GET["user"].' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
 
 	//echo $sql;
 
 	$result = mysql_query($sql);
 
-	if (!$result) { die("SQL ERROR"); }
+	if (!$result) { die("SQL ERROR: File List"); }
 
 	while($row = mysql_fetch_row($result))
 	{
+		/* get latest versions of each file for this assignment */
+
+		$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$_GET["user"].' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
+
+		//$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$user_id.' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
+
+	//echo $sql;
+
+
+		// get all comments for this particular file
+		$sql = "select filecom_id, file_id, line_no, user_id, txt, timeposted from filecom where file_id=".$row[0]." order by line_no, timeposted";
+	
+		$filecom = mysql_query($sql);
+		if (!$filecom) { die("SQL ERROR: File Comments"); }
+
+		// only get first line comment
+		$filecoms = mysql_fetch_array($filecom);
+
+		// TODO: COMPLETE GETTING FILE COMMENTS
+
 		$code = $row[5];
 		/* escape open and close symbols <> */
-		$code = str_replace("<", "&lt;", $code);
-		$code = str_replace(">", "&gt;", $code);
+		/*
+			< = &lt;
+			> = &gt;
+			/ = &#47;  	
+			] = &#93;
+			[ = &#91;
+			" = &#34;
+			' = &#39;
+	*/
+
+		//$code = str_replace("<", "&lt;", $code);
+		//$code = str_replace(">", "&gt;", $code);
+		//$code = str_replace("\t", "TAB", $code);
+
+		$code = htmlspecialchars($code);
 
 		/* add line numbers to code */
 		$lines = explode("\n", $code);
 
+		// lines of code in file
 		$i = 1; $code = "";
 		foreach($lines AS $line)
 		{
-			$code .= "\n".$i."|";
-			$code .= $line;
+			// we only get line comments as they are needed
+			if($filecoms['line_no'] == $i) {
+				// comment lies in here if present and empty form hides here if not...
+				//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
+				$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
+				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
+				$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;";
+				$code .= "<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";
+			} else {
+				// comment lies in here if present and empty form hides here if not...
+				//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
+				$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
+				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
+				$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;";
+				$code .= "<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";			
+			}
+
+			$code .= "<div id='line' onClick='line_comment(\"line_com_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
+			if($line == '') { $code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";
+			} else {          $code .= "<pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
 			$i++;
 		}
 
+		// header for file
 		$files .= '<div class="file">
 			<div class="file_head"><img src="gfx/page_white_gear.png">
 				<span class="fname">'.$row[2].'</span>
 				<span class="fsize">'.$row[3].'B</span>
 				<span class="fdate">'.$row[4].'</span>
-				<span class="fraw"><button>Raw</button></span>
+				<!-- <span class="fedit"><button>Edit</button></span>
+				<span class="fraw"><button>Raw</button></span>-->
 			</div>
 			<div class="highlight">
-				<pre class="sh_cpp">
+				<div>
 	'.$code.'
 
-				</pre>
+				</div>
 			</div>
-		</div>';
+		</div><br><br>';
 	}
 
 	/* get comments for this assignment */

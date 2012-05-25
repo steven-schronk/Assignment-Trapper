@@ -1,15 +1,15 @@
+change password does not work in Internet Explorer
+cannot hot enter for login credentials form
+files not listing in correct order on details page
+send email when files are posted
+
+
 cannot recover password for students
-no SQL injection protection
 Line numbers not aligning properly.
-Assignments modified feed shows all assignments to students.
 Create basic assignments for first chapter for each class.
 Fix logo on front page of opentextbook.info website.
-Comb over Assignment Tracker Code looking for bad remnants.
 Backup Assignment Trapper Code.
 Put clock on manage account page
-
-RSS Feed for modified assignments
-RSS Feed for comments about student code
 
 Email for created or modified assignments
 Email for late assignments

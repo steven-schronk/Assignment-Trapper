@@ -15,7 +15,8 @@ $sql = "select count(*), user_id, role, name, first_login from users where email
 
 $result = mysql_query($sql);
 
-if (!$result) { die("SQL ERROR"); }
+if (!$result) { die("SQL ERROR: Get Cred"); }
+//if (!$result) { mysql_error(); }
 
 $row = mysql_fetch_row($result);
 

@@ -26,7 +26,8 @@ $allowedExtensions = array("c", "cpp", "c++", "h");
 if(!in_array(end(explode(".", $_FILES["file"]["name"])), $allowedExtensions)) { die("File Extension Not Correct"); }
 
 /* check for file type */
-if ($_FILES["file"]["type"] != "text/plain") { die("Incorrect File Format.<br>Must be C or C++ text file."); }
+//echo "File Type:".$_FILES["file"]["type"];
+//if ($_FILES["file"]["type"] != "text/plain") { die("Incorrect File Format.<br>Must be C or C++ text file."); }
 
 /* check for file size */
 if($_FILES["file"]["size"] > 400000) { die("File Must be Smaller Than 400KB."); }

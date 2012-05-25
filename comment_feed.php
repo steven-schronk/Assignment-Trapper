@@ -20,8 +20,8 @@ if($role == 0) {
 
 $result = mysql_query($sql);
 
-$server_url =  "http://".$_SERVER['SERVER_ADDR'].$_SERVER['PHP_SELF'];
-$server_url_base =  "http://".$_SERVER['SERVER_ADDR'];
+$server_url =  "http://".$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];
+$server_url_base =  "http://".$_SERVER['SERVER_NAME'];
 //echo $server_url;
 
 if (!$result) { die("SQL ERROR"); }
@@ -42,15 +42,16 @@ while($row = mysql_fetch_array($result))
 ';
 
 	$i++;
-
 }
 
 $now = date("D, d M Y H:i:s T");
 
 //echo $now;
 
+echo '<?xml version="1.0" encoding="UTF-8" ?>';
+
 ?>
-<?xml version="1.0" encoding="UTF-8" ?>
+
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
         <title>Assignment Trapper - Comment Feed</title>
