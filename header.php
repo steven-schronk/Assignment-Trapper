@@ -5,8 +5,9 @@ if($user_id != '') { $menu = '<a href="index.php">Classes</a> | <a href="manage.
 ?>
 
 <html>
-
-<script src="general.js" type="text/javascript"></script>
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript" src="debugger.js"></script>
+<script type="text/javascript" src="general.js"></script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" media="all" href="include/calendar.css" title="win2k-cold-1" />
 

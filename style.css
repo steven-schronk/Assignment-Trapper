@@ -42,6 +42,9 @@ table.gridtable td {
 .com_name { position: relative; left: 15px; top: -8px;  }
 .com_head { padding-left: 15px; padding-top: 3px; border: 1px solid #000; background-color: #c1d5ff; }
 
+.comment_username { position: relative; right: 100px; top: -8px; }
+.comment_time { position: relative; right: 0px; top: -8px;  }
+
 .fname { position: relative; left: 15px; top: -8px;  }
 .fsize { position: relative;  left: 40px; top: -8px;  color: #888; }
 .fdate { position: relative;  left: 100px; top: -8px;  color: #888; padding-left: 25px; }

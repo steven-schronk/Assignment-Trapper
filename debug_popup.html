@@ -1,0 +1,278 @@
+<html>
+<head>
+<script language="JavaScript" src="debugger.js"></script>
+<style>
+
+.header {
+	background-color: #ddd;
+	border: 1px solid #000;
+	font-size: 12px;
+	font-family: sans-serif;
+	width: 100%;
+	padding: 1px 1px 1px 1px;
+	}
+
+#main {
+  width: 100%;
+  }
+
+/* HEADLINE STYLESHEETS */
+
+#error_headline {
+	white-space: nowrap;
+	background-color: #f00;
+	color: #fff;
+	border: 1px solid #000;
+  border-top: none;
+	font-size: 12px;
+	font-family: sans-serif;
+	position: relative;
+	padding: 1px 1px 1px 1px;
+	}
+
+#get_headline {
+	white-space: nowrap;
+  background-color: #ffd695;
+	border: 1px solid #000;
+  border-top: none;
+	font-size: 12px;
+	font-family: sans-serif;
+	position: relative;
+	padding: 1px 1px 1px 1px;
+	}
+
+#got_headline {
+	white-space: nowrap;
+	background-color: #bfb;
+	border: 1px solid #000;
+  border-top: none;
+	font-size: 12px;
+	font-family: sans-serif;
+	position: relative;
+	padding: 1px 1px 1px 1px;
+	}
+
+#unknown_headline {
+	white-space: nowrap;
+	background-color: #2100b1;
+	border: 1px solid #000;
+  border-top: none;
+	font-size: 12px;
+	font-family: sans-serif;
+	position: relative;
+	padding: 1px 1px 1px 1px;
+	color: #fff;
+	}
+
+/* PURPLE BOX WITH A "P" IN IT */
+
+.content {
+	position: absolute;
+	top: 2px;
+	right: 28px;
+	width: 10px;
+	height: 10px;
+	border: 1px solid #000;
+  background-color: #a000ff;
+	cursor:pointer;
+	color: #fff;
+	display: inline;
+	}
+
+/* WHITE BOX WITH A "+" IN IT */
+
+.icon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #000;
+  background-color: #fff;
+  cursor:pointer;
+  color: #000;
+  display: inline;
+  }
+
+/* BLUE BOX WITH A "U" IN IT */
+
+.address {
+  position: absolute;
+  top: 2px;
+  right: 14px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #000;
+  background-color: #0066ff;
+  cursor:pointer;
+  color: #fff;
+  display: inline;
+  }
+
+/* WHITE BOX WITH A "R" IN IT */
+/* SHOWN ON MAIN BANNER       */
+
+.reset {
+  position: absolute;
+  top: 17px;
+  right: 12px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #000;
+  background-color: #f00;
+  cursor:pointer;
+  color: #fff;
+  display: inline;
+  }
+
+.agent {
+  position: absolute;
+  display: inline;
+  left: 250px;
+  }
+
+.events {
+  position: absolute;
+  left: 150px;
+  display: inline;
+  font-weight: bold;
+  }
+
+.ajaxt {
+  position: absolute;
+  left: 300px;
+  display: inline;
+  font-weight: bold;
+  }
+
+#ajax_min {
+  color: #0a0;
+  display: inline;
+  }
+
+#ajax_max {
+  color: #f00;
+  display: inline;
+  }
+
+#ajax_avg {
+  color: #00f;
+  display: inline;
+  }
+
+.time {
+  position: absolute;
+  left: 100px;
+  display: inline;
+  }
+
+.url {
+  display: inline;
+  }
+
+#time {
+	display: inline;
+	}
+
+#ping {
+  display: inline;
+  position: absolute;
+  left: 450px;
+  }
+
+.cookie {
+  border-top: 1px solid #fff;
+  background-color: #f4f4f4;
+  }
+
+.post {
+  border-top: 1px solid #ccc;
+  background-color: #ddd;
+  }
+
+.payload {
+  font-size: 12px;
+  font-family: sans-serif;
+  }
+
+/* COLORS FOR PAYLOAD */
+
+#bold {
+	color: #000;
+	display: inline;
+	font-weight: bold;
+	}
+
+#gray {
+	color: #aaa;
+	display: inline;
+	}
+
+#green {
+	color: #0a0;
+	display: inline;
+	}
+
+#blue {
+	color: #00f;
+	display: inline;
+	}
+
+#red {
+	color: #f00;
+	display: inline;
+	}
+
+/* ALIGNMENT DIVs */
+
+#right_justify {
+  display: inline;
+  width: 45%; /* KEEPS DIV INFO FROM JUMPING */
+  text-align: right;
+  }
+
+#left_justify {
+  display: inline;
+  width: 45%; /* KEEPS DIV INFO FROM JUMPING */
+  text-align:left;
+  }
+
+</style>
+</head>
+<body onload="StartClock();" onunload="KillClock()">
+<div class=header>
+  <div id=bold>Debug Console</div>
+  <!-- <div id=bold>testPage.php</div> -->
+  <div class=agent><script> document.write(navigator.appName + " - " + navigator.platform);</script></div>
+  <br />
+  <div id=time>00:00:00</div>
+  <div class=ajaxt>
+    <div id=bold>Ajax Time</div>{&nbsp;
+    <div id=ajax_max>Max: 0</div>|
+    <div id=ajax_avg>Avg: 0</div>|
+    <div id=ajax_min>Min: 0</div>&nbsp;}
+  </div>
+  <div class=events id=events>Event: 0</div>
+    <div class=reset onClick='clearDebugger()'>R</div>
+</div>
+
+<div id=main>
+    <!-- SAMPLE DATA
+    <div id="get_headline">
+      18:15:12
+      <div class=time>PING: 0.0000</div>
+      <br />URL:
+      <div class=url>google.com</div>
+      <div class=content>C</div>
+      <div class=address>U</div>
+      <div class=icon>~</div>
+    </div>
+    <div class=payload>
+      <div class=code><div id=bold>PAYLOAD DATA:</div><br />DATA DATA DATA DATA </div>
+      <div class=post><div id=bold>POST DATA:</div><br />DATA DATA DATA DATA</div>
+      <div class=cookie><div id=bold>COOKIE DATA:</div><br /> <script></script></div>
+    </div>
+    -->
+</div>
+</body>
+</html>

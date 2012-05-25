@@ -1,6 +1,7 @@
 <?php
 
 include_once("auth.php");
+include_once("time.php");
 
 if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
 
@@ -37,7 +38,7 @@ while($row = mysql_fetch_row($result))
 
 	$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
-	$html .= '<td>'.$submission.'</td></tr>';
+	$html .= '<td>'.absHumanTiming($row[6]).'</td></tr>';
 }
 
 /* get class this assignment is from for breadcrumbs */
@@ -150,20 +151,20 @@ if($_GET["user"] == '' ) {
 			if($filecoms['line_no'] == $i) {
 				// comment lies in here if present and empty form hides here if not...
 				//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
-				$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
-				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
-				$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;";
-				$code .= "<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";
+				$code .= "<div id='line_com_".$row[0]."_".$i."' class='line_comment'>";
+				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$row[0]."_".$i."' type=text size=100>&nbsp;&nbsp;";
+				$code .= "<button onClick='line_comment_save(".$row[0].", ".$i.", \"line_com_".$row[0]."_".$i."\",\"line_com_val_".$row[0]."_".$i."\");'>Save</button>&nbsp;&nbsp;";
+				$code .= "<button onClick='line_comment_cancel(\"line_com_".$row[0]."_".$i."\");'>Cancel</button></div>";
 			} else {
 				// comment lies in here if present and empty form hides here if not...
 				//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
-				$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
-				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
-				$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;";
-				$code .= "<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";			
+				$code .= "<div id='line_com_".$row[0]."_".$i."' class='line_comment'>";
+				$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$row[0]."_".$i."' type=text size=100>&nbsp;&nbsp;";
+				$code .= "<button onClick='line_comment_save(".$row[0].", ".$i.", \"line_com_".$row[0]."_".$i."\",\"line_com_val_".$row[0]."_".$i."\");'>Save</button>&nbsp;&nbsp;";
+				$code .= "<button onClick='line_comment_cancel(\"line_com_".$row[0]."_".$i."\");'>Cancel</button></div>";			
 			}
 
-			$code .= "<div id='line' onClick='line_comment(\"line_com_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
+			$code .= "<div id='line' onClick='line_comment(\"line_com_".$row[0]."_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
 			if($line == '') { $code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";
 			} else {          $code .= "<pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
 			$i++;
@@ -231,11 +232,13 @@ if($_GET["user"] == '' ) {
 
 ?>
 
+<input type="button" href="" onClick='openDebug(window.location)' value="Debug">
+
 <h3><?php echo $breadcrumb; ?> -> Assignment Details</h3>
 
 <table class="gridtable">
 	<tr>
-		<th>Chapter</th><th>Section</th><th>Title</th><th>Type</th><th>Avalaible</th><th>Due</th><th>Submission</th><th>Status</th>
+		<th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th><th>Avalable Date</th><th>Due Date</th><th>Human Time</th>
 	</tr>
 
 	<?php echo $html; ?>
