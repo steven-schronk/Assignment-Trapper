@@ -5,6 +5,26 @@ include_once("header.php");
 include_once("time.php");
 include_once("user_details.php");
 
+function taunt_user()
+{
+	$taunt[0] = "No Soup For You";
+	$taunt[1] = "My Dog Ate It";
+	$taunt[2] = "Alien Invasion";
+	$taunt[3] = "Alien Abduction";
+	$taunt[4] = "Epic Fail";
+	$taunt[5] = "You Have Failed To Fail";
+	$taunt[6] = "None Shall Pass";
+	$taunt[7] = "You'll Get Nothing And Like It";
+	$taunt[8] = "Virus";
+	$taunt[9] = "Fries With That?";
+	$taunt[10] = "You're Still Here?";
+	$taunt[11] = "About Time...";
+	$rand = rand (0, 11);
+	return $taunt[$rand];
+}
+
+if(isset($_GET["user"])) { $user_sent = true; } else { $user_sent = false; }
+
 // prevents students from seeing other's work
 if($role != 0) { $_GET["user"] = $user_id; }
 
@@ -50,13 +70,15 @@ if($role == 0) {
 }
 
 /* get files / late status for this assignment */
-if($role == 0 && $_GET["user"]) {
-	if(assignment_late($_GET["user"], $_GET["sched"])) {
-		$file_count .= '<img src=gfx/tick_off.png></td>';
-	} else {
-		if(file_count($_GET["user"], $_GET["sched"])) {
-			$file_count .= '<img src=gfx/star.png></td>';
-		} else { $file_count .= '<img src=gfx/error.png></td>'; }
+if($role == 0 ) {
+	if($user_sent) {
+		if(assignment_late($_GET["user"], $_GET["sched"])) {
+			$file_count .= '<img src=gfx/tick_off.png></td>';
+		} else {
+			if(file_count($_GET["user"], $_GET["sched"])) {
+				$file_count .= '<img src=gfx/star.png></td>';
+			} else { $file_count .= '<img src=gfx/error.png></td>'; }
+		}
 	}
 
 } else {
@@ -80,36 +102,36 @@ $result = mysql_query($sql);
 
 if (!$result) { die("SQL ERROR"); }
 
-while($row = mysql_fetch_row($result))
+while($row = mysql_fetch_array($result))
 {
 	$html .= '<tr>';
 
+	$html .= '<td>'.$row['sched_id'].'</td>';
+
 	// assignment started?
-	if($row[11] < 0){
+	if($row['ava'] < 0){
 		$html .= "<td><img src=gfx/bullet_black.png>";
 		$started = false;
 	} else {
 		// assignment open?
-		if($row[8] > 0 || $row[10] < 0) { $html .= "<td><img src=gfx/bullet_delete.png>"; } else { $html .= "<td><img src=gfx/bullet_add.png>"; }
+		if($row['status'] > 0 || $row['ava'] < 0) { $html .= "<td><img src=gfx/bullet_delete.png>"; } else { $html .= "<td><img src=gfx/bullet_add.png>"; }
 		$started = true;
 	}
 
-
 	// assignment graded?
-	if($row[12]) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
+	if($row['graded']) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
 
 	$html .= $help_icon;
 	$html .= $file_count."</td>";
-	$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
-	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
+	$html .= '<td><a href="detail_root.php?sched='.$row['sched_id'].'">'.$row['title'].'</a></td><td>'.$row['type_name'].'</td><td>'.$row['chapter'].'</td>';
+	$html .= '<td>'.$row['section_id'].'</td><td>'.$row['ava_date'].'</td><td>'.$row['due_date'].'</td>';
 
 	if($started) {
-		$html .= '<td>'.absHumanTiming($row[6]).'</td>';
+		$html .= '<td>'.absHumanTiming($row['due_date']).'</td>';
 	} else {
-		$html .= '<td>'.absHumanTiming($row[5]).'</td>';
+		$html .= '<td>'.absHumanTiming($row['ava_date']).'</td>';
 	}
 
-	//$html .= '<td>'.absHumanTiming($row[6]).'</td>';
 	if($role != 0 ) { $html .= '<td><a href=help_me.php?sched='.$_GET["sched"].'>'.$help_stat.'</a></td>'; }
 	$html .= '</tr>';
 }
@@ -141,24 +163,38 @@ if($_GET["user"] == '' ) {
 	$class_id = $row[0];
 
 	/* get list of students that are in this class and generate a list of them */
-	$sql = 'select users.name, users.email, users.user_id, role from users, enrollment where (users.user_id = enrollment.user_id) and enrollment.class_id='.$class_id.' order by users.name';
-
-	//echo $sql;
+	$sql = 'select users.name, users.user_id, role from users, enrollment where (users.user_id = enrollment.user_id) and enrollment.class_id='.$class_id.' order by users.name';
 
 	$result = mysql_query($sql);
 
 	if (!$result) { die("SQL ERROR"); }
 
-	$student_list = '<table class="gridtable">
-	<tr>
-		<th>Role</th><th>Name</th><th>Email</th><th>Grade</th>
-	</tr>';
+	$student_list = '<table class="gridtable"><tr><th>Student</th><th>Student</th><th>Student</th><th>Student</th></tr>';
+
+	$i = 1;
+
+	$student_list .= '<tr>';
 
 	while($row = mysql_fetch_array($result)) // getting list of students
 	{
-		$student_list .= '<tr><td>';
-		if($row['role'] == 0) { $student_list .= '<img src="gfx/user_suit.png">'; } else { $student_list .=  '<img src="gfx/user_green.png">'; }
-		$student_list .= '</td><td>'.$row['name'].'</td><td>'.$row['email'].'<td><a href=detail_root.php?sched='.$_GET["sched"].'&user='.$row['user_id'].'>Grade</a></td></tr>';
+		$student_list .= '<td>';
+		//if(assignment_late($user_id, $_GET[$sched]) { } else { }
+
+		if(need_help($row['user_id'], $_GET['sched'])) {
+			$student_list .= '<img src=gfx/flag_red.png>';
+		} else { $student_list .= '<img src=gfx/flag_white.png>'; }
+
+		if(assignment_late($row['user_id'], $_GET['sched'])) {
+			$student_list .= '<img src=gfx/tick_off.png>';
+		} else {
+			if(file_count($row['user_id'], $_GET['sched'])) {
+				$student_list .= '<img src=gfx/star.png>';
+			} else { $student_list .= '<img src=gfx/error.png>'; }
+		}
+		
+		//if($row['role'] == 0) { $student_list .= '<img src="gfx/user_suit.png">'; } else { $student_list .=  '<img src="gfx/user_green.png">'; }
+		$student_list .= '<a href=detail_root.php?sched='.$_GET["sched"].'&user='.$row['user_id'].'>'.$row['name'].'</a></td>';
+		if( $i == 4) { $i = 1; $student_list .= '</tr><tr>'; } else { $i++; }
 	}
 
 	$student_list .= '</table>';
@@ -383,7 +419,7 @@ if($row[0] == 1) { // assignment is open
 
 } else { // assignment is closed - show as a red upload box
 	if($role == 0 && $user_id_role == 0 && $user_data_sent) {
-		$upload_form = '<div class="comment_box_closed"><div class="comment_box_closed_message">-20 POINTS</div>
+		$upload_form = '<div class="comment_box_closed"><div class="comment_box_closed_message">'. taunt_user().'</div>
 		Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
 		<input type="file" name="file" size="40"><br><br>
 		<input name="user" type="hidden" value='.$_GET["user"].'>
@@ -391,7 +427,7 @@ if($row[0] == 1) { // assignment is open
 		<input type="submit" name="submit" value="Submit"/>
 		</form></div>';
 	} else if($role != 0) {
-		$upload_form = '<div class="comment_box_closed"><div class="comment_box_closed_message">-20 POINTS</div>
+		$upload_form = '<div class="comment_box_closed"><div class="comment_box_closed_message">'. taunt_user().'</div>
 			Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
 			<input type="file" name="file" size="40"><br><br>
 			<input type="submit" name="submit" value="Submit"/>
@@ -434,7 +470,7 @@ if($role == 0) {
 
 <table class="gridtable">
 	<tr>
-		<th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th><th>Avalable Date</th><th>Due Date</th><th>Human Time</th>
+		<th>#</th><th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th><th>Avalable Date</th><th>Due Date</th><th>Human Time</th>
 
 		<?php if($role != 0 ) { echo "<th>Help</th>"; } ?>
 	</tr>

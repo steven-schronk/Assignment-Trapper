@@ -54,7 +54,9 @@ if($user_id != '') {
 </head>
 <body onload="sh_highlightDocument();">
 
-<h2><img src="gfx/bricks.png">Assignment Trapper</h2>
+<table>	<tr><td><img src="gfx/bricks.png"></td><td class="banner_header">Assignment Trapper</td></tr></table>
+
+
 <div class="header">
 	<div class="menu">
 		<?php echo $menu; ?>

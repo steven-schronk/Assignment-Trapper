@@ -17,6 +17,11 @@ body {
 	font-size: 20px;
 	font-weight:bold;
 }
+.banner_header {
+	font-size: 40px;
+	font-weight:bold;
+	color: #666;
+}
 .col {
 	position: relative;
 	float: left;
@@ -328,5 +333,5 @@ table.gridtable td {
     float:right;
     color: #faa;
     font-weight:bold;
-    font-size: 120px;
+    font-size: 65px;
 }

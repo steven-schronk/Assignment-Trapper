@@ -12,32 +12,61 @@ $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $user_count = $row[0];
 
+
 $sql = 'select count(*), max(timeposted) from schedule';
 
 $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $assignment_count = $row[0];
-$assignment_max = $row[1];
+if($assignment_count == 0) {
+	$assignment_max = "Never";
+	$assignment_time = "Never";
+} else {
+	$assignment_max = $row[1];
+	$assignment_time = absHumanTiming($assignment_max);
+}
 
 $sql ='select count(*), max(timeposted) from comments';
 
 $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $comment_count = $row[0];
-$comment_max = $row[1];
+if($comment_count == 0) {
+	$comment_max = "Never";
+	$comment_time = "Never";
+} else {
+	$comment_max = $row[1];
+	$comment_time = absHumanTiming($comment_max);
+}
+
 
 $sql = 'select count(*), max(timeposted) from filecom';
 
 $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $filecomm_count = $row[0];
-$filecomm_max = $row[1];
+if($filecomm_count == 0) {
+	$filecomm_max = "Never";
+	$filecomm_time = "Never";
+} else {
+	$filecomm_max = $row[1];
+	$filecomm_time = absHumanTiming($filecomm_max);
+}
+
 
 $sql = 'select count(*), max(time_post) from files';
 
 $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $file_count = $row[0];
+if($file_count == 0) {
+	$file_max = "Never";
+	$file_time = "Never";
+} else {
+	$file_max = $row[1];
+	$file_time = absHumanTiming($file_max);
+}
+
 $file_max = $row[1];
 
 $sql = 'select count(*) from users where attempts > 100';
@@ -84,10 +113,10 @@ $std_locked = $row[0];
 <div class="col">
 	<table class="gridtable">
 	<tr><th>Stat</th><th>Value</th><th>Human Time</th><th>Last Updated</th></tr>
-	<tr><td>Files:</td><td><?php echo $file_count; ?></td><td><?php echo absHumanTiming($file_max); ?></td><td><?php echo $file_max; ?></td></tr>
-	<tr><td>File Comments:</td><td><?php echo $filecomm_count; ?></td><td><?php echo absHumanTiming($filecomm_max); ?></td><td><?php echo $filecomm_max; ?></td></tr>
-	<tr><td>Comments:</td><td><?php echo $comment_count; ?></td><td><?php echo absHumanTiming($comment_max); ?></td><td><?php echo $comment_max; ?></td></tr>
-	<tr><td>Assignments:</td><td><?php echo $assignment_count; ?></td><td><?php echo absHumanTiming($assignment_max); ?></td><td><?php echo $assignment_max; ?></td></tr>
+	<tr><td>Files:</td><td><?php echo $file_count; ?></td><td><?php echo $file_time; ?></td><td><?php echo $file_time; ?></td></tr>
+	<tr><td>File Comments:</td><td><?php echo $filecomm_count; ?></td><td><?php echo $filecomm_time; ?></td><td><?php echo $filecomm_max; ?></td></tr>
+	<tr><td>Comments:</td><td><?php echo $comment_count; ?></td><td><?php echo $comment_time; ?></td><td><?php echo $comment_max; ?></td></tr>
+	<tr><td>Assignments:</td><td><?php echo $assignment_count; ?></td><td><?php echo $assignment_time; ?></td><td><?php echo $assignment_max; ?></td></tr>
 	<tr><td>Users:</td><td colspan=3><?php echo $user_count; ?></td></tr>
 	<tr><td>Users Locked:</td><td colspan=3><?php echo $std_locked; ?></td></tr>
 	<tr><td>Current Time:</td><td colspan=3><?php echo date("F d, Y h:i" ,time()); ?></td></tr>
@@ -103,21 +132,39 @@ $sql = 'select count(*), max(time_post) from files where user_id = '.$user_id;
 $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $file_count = $row[0];
-$file_max = $row[1];
+if($file_count == 0) {
+	$file_max = "Never";
+	$file_time = "Never";
+} else {
+	$file_max = $row[1];
+	$file_time = absHumanTiming($file_max);
+}
 
 $sql ='select count(*), max(timeposted) from comments where user_id = '.$user_id;
 
 $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $comment_count = $row[0];
-$comment_max = $row[1];
+if($comment_count == 0) {
+	$comment_max = "Never";
+	$comment_time = "Never";
+} else {
+	$comment_max = $row[1];
+	$comment_time = absHumanTiming($comment_max);
+}
 
 $sql = 'select count(*), max(timeposted) from filecom where user_id = '.$user_id;
 
 $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $filecomm_count = $row[0];
-$filecomm_max = $row[1];
+if($filecomm_count == 0) {
+	$filecomm_max = "Never";
+	$filecomm_time = "Never";
+} else {
+	$filecomm_max = $row[1];
+	$filecomm_time = absHumanTiming($filecomm_max);
+}
 
 ?>
 <div class="col2">
@@ -134,10 +181,10 @@ $filecomm_max = $row[1];
 </div>
 <div class="col">
 	<table class="gridtable">
-	<tr><th>Stat</th><th>Value</th><th>Human Time</th><th>Last Updated</th></tr>
-	<tr><td>Files:</td><td><?php echo $file_count; ?></td><td><?php echo absHumanTiming($file_max); ?></td><td><?php echo $file_max; ?></td></tr>
-	<tr><td>File Comments:</td><td><?php echo $filecomm_count; ?></td><td><?php echo absHumanTiming($filecomm_max); ?></td><td><?php echo $filecomm_max; ?></td></tr>
-	<tr><td>Comments:</td><td><?php echo $comment_count; ?></td><td><?php echo absHumanTiming($comment_max); ?></td><td><?php echo $comment_max; ?></td></tr>
+	<tr><th>Stat</th><th>Count</th><th>Human Time</th><th>Last Updated</th></tr>
+	<tr><td>Files:</td><td><?php echo $file_count; ?></td><td><?php echo $file_time; ?></td><td><?php echo $file_max; ?></td></tr>
+	<tr><td>File Comments:</td><td><?php echo $filecomm_count; ?></td><td><?php echo $filecomm_time; ?></td><td><?php echo $filecomm_max; ?></td></tr>
+	<tr><td>Comments:</td><td><?php echo $comment_count; ?></td><td><?php echo $comment_time; ?></td><td><?php echo $comment_max; ?></td></tr>
 	</table>
 </div>
 
