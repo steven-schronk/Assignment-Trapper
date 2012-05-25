@@ -6,6 +6,8 @@ if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This 
 
 if (!$_GET["sched"]) { die("No Assignment Requested"); }
 
+$_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
+
 /* determine if assignment is still open */
 
 $sql = 'select count(*) from schedule where ava_date < NOW() and due_date > NOW() and sched_id ='.$_GET["sched"];

@@ -5,6 +5,10 @@ include_once("auth.php");
 if (!$_GET["comment"]) { die("No Comment Sent");     }
 if (!$_GET["sched"])   { die("No Schedule ID Sent"); }
 
+$_GET["user"] = mysql_real_escape_string($_GET["user"]);
+$_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
+$_GET["comment"] = mysql_real_escape_string($_GET["comment"]);
+
 // faculty must submit not only the schedule, but the user commented about as well
 if($role == 0 && !$_GET["user"]) {  die("No User ID Sent"); }
 

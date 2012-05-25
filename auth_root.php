@@ -6,6 +6,9 @@ include_once("conn.php");
 if(!isset($_COOKIE["username"])) { include("login.php"); exit; }
 if(!isset($_COOKIE["password"])) { include("login.php"); exit; }
 
+$_COOKIE["username"] = mysql_real_escape_string($_COOKIE["username"]);
+$_COOKIE["password"] = mysql_real_escape_string($_COOKIE["password"]);
+
 $sql = "select count(*), user_id, role, name from users where email='". $_COOKIE["username"]. "' and password=SHA('".$_COOKIE["password"]."')";
 
 $result = mysql_query($sql);

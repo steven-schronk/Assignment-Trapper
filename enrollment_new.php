@@ -4,6 +4,10 @@ include_once("auth.php");
 
 if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
 
+$_GET["name"] = mysql_real_escape_string($_GET["name"]);
+$_GET["email"] = mysql_real_escape_string($_GET["email"]);
+$_GET["class"] = mysql_real_escape_string($_GET["class"]);
+
 // insert new user into database
 
 if($_GET['action'] == "add")

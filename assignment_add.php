@@ -6,6 +6,16 @@ if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This 
 
 // TODO: Add this back... if (!$_GET["sched"]) { die("No Assignment Requested"); }
 
+$_POST["class"] = mysql_real_escape_string($_POST["class"]);
+$_POST["title"] = mysql_real_escape_string($_POST["title"]);
+$_POST["st"] = mysql_real_escape_string($_POST["st"]);
+$_POST["section_id"] = mysql_real_escape_string($_POST["section_id"]);
+$_POST["title"] = mysql_real_escape_string($_POST["title"]);
+$_POST["chapter"] = mysql_real_escape_string($_POST["chapter"]);
+$_POST["ava_date"] = mysql_real_escape_string($_POST["ava_date"]);
+$_POST["due_date"] = mysql_real_escape_string($_POST["due_date"]);
+$_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
+
 include 'include/std_functions.php';
 
   $sane = true; // must check sanity before posting
@@ -118,6 +128,11 @@ while($row = mysql_fetch_array($result))
 $title = $_POST['title'];
 $chapter = $_POST['chapter'];
 $section_id = $_POST['section_id'];
+
+$title = mysql_real_escape_string($title);
+$chapter = mysql_real_escape_string($chapter);
+$section_id = mysql_real_escape_string($section_id);
+
 if( $_POST['ava_date'] == "" ) { $ava_date = todays_date(); } else { $ava_date = $_POST['ava_date']; }
 if( $_POST['due_date'] == "" ) { $ava_date = todays_date(); } else { $ava_date = $_POST['due_date']; }
 if($_GET['action'] == "edit") {

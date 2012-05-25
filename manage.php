@@ -20,6 +20,11 @@ if($role==0) {
 } else {
 
 ?>
+			<h3>Feeds:</h3>
+
+			<img src="gfx/rss.png"><a href="comment_feed.php">Full Comments</a><br>
+			<img src="gfx/rss.png"><a href="assignment_feed.php">Assignments Modified</a>
+
 			<h3>Links:</h3>
 			<a href="password_change.php">Change Password</a><br>
 		

@@ -4,6 +4,8 @@ include_once("auth.php");
 
 if (!$_GET["sched"]) { die("No Assignment Requested"); }
 
+$_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
+
 /* get assignment details */
 $html = "";
 
@@ -63,16 +65,13 @@ if (!$result) { die("SQL ERROR: File List"); }
 while($row = mysql_fetch_row($result))
 {
 	// get all comments for this particular file
-	$sql = "select * from filecom where file_id=".$row[0]." order by line_no, timeposted";
+	$sql = "select filecom_id, file_id, line_no, user_id, txt, timeposted from filecom where file_id=".$row[0]." order by line_no, timeposted";
 	
 	$filecom = mysql_query($sql);
 	if (!$filecom) { die("SQL ERROR: File Comments"); }
 
 	// only get first line comment
-	$filecoms = mysql_fetch_row($filecom);
-
-	// after that, we only get line comments as they are needed
-	//if(
+	$filecoms = mysql_fetch_array($filecom);
 
 	// TODO: COMPLETE GETTING FILE COMMENTS
 
@@ -101,11 +100,22 @@ while($row = mysql_fetch_row($result))
 	$i = 1; $code = "";
 	foreach($lines AS $line)
 	{
-		// comment lies in here if present and empty form hides here if not...
-		//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
-		$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
-		$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
-		$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";
+		// we only get line comments as they are needed
+		if($filecoms['line_no'] == $i) {
+			// comment lies in here if present and empty form hides here if not...
+			//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
+			$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
+			$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
+			$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;";
+			$code .= "<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";
+		} else {
+			// comment lies in here if present and empty form hides here if not...
+			//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
+			$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
+			$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
+			$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;";
+			$code .= "<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";			
+		}
 
 		$code .= "<div id='line' onClick='line_comment(\"line_com_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
 		if($line == '') { $code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";

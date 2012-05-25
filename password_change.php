@@ -6,6 +6,13 @@ include_once("conn.php");
 
 if($_COOKIE["username"]) { $username = $_COOKIE["username"]; } else { $username = $_POST['password']; }
 
+$username = mysql_real_escape_string($username);
+
+$_COOKIE["username"] = mysql_real_escape_string($_COOKIE["username"]);
+$_POST["password"] = mysql_real_escape_string($_POST["password"]);
+$_POST["new_password_1"] = mysql_real_escape_string($_POST["new_password_1"]);
+$_POST["new_password_2"] = mysql_real_escape_string($_POST["new_password_2"]);
+
 $error_count = 0;
 
 if(!$_POST['password']) { $error .= "Old password field empty.<br>"; $error_count++; }

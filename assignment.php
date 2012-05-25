@@ -8,6 +8,8 @@ if(!isset($_GET["class"])) { die("No Class ID Sent"); }
 
 $class = "";
 
+$_GET["class"] = mysql_real_escape_string($_GET["class"]);
+
 $sql = "select class_name, class_id from class where class_id =". $_GET['class'];
 
 $result = mysql_query($sql);

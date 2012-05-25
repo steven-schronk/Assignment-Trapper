@@ -4,6 +4,8 @@ include_once("auth.php");
 
 $html = "";
 
+$user_id = mysql_real_escape_string($user_id);
+
 $sql = 'select distinct class.class_id, class_name, class_section, class_location, class_instructor from enrollment, class, users where (users.user_id = enrollment.user_id) and (enrollment.class_id = class.class_id) and enrollment.user_id = '.$user_id;
 
 $result = mysql_query($sql);

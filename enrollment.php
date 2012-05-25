@@ -4,6 +4,10 @@ include_once("auth.php");
 
 if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
 
+$_GET["action"]  = mysql_real_escape_string($_GET["action"]);
+$_GET["user_id"] = mysql_real_escape_string($_GET["user_id"]);
+$_GET["class"]   = mysql_real_escape_string($_GET["class"]);
+
 if($_GET['action'] == "delete")
 {
 	if ($_GET['class'] == "")   { die("No Class ID Sent"); }
@@ -37,7 +41,7 @@ while($row = mysql_fetch_array($result))
 }
 
 /* get list of all students */
-$sql = 'select user_id, name, email from users  order by name';
+$sql = 'select user_id, name, email from users order by name';
 $result = mysql_query($sql);
 if (!$result) { die("SQL ERROR"); }
 while($row = mysql_fetch_array($result))
@@ -56,7 +60,7 @@ if ($_GET["class"]) {
 	}
 
 	/* get list of students in this class */
-	$sql = 'select enrollment.user_id, name, email from enrollment, users where (users.user_id = enrollment.user_id) and class_id='.$_GET['class'];
+	$sql = 'select enrollment.user_id, name, email from enrollment, users where (users.user_id = enrollment.user_id) and class_id='.$_GET['class'].' order by name';
 	$result = mysql_query($sql);
 	if (!$result) { die("SQL ERROR"); }
 	while($row = mysql_fetch_array($result))

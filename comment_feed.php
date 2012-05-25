@@ -5,9 +5,16 @@ include_once("auth_root.php");
 
 /* TODO: Lock out account if this user keeps hitting this page. */
 
-if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
+//if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
 
-$sql = 'select txt, name, email, title, type_name, DATE_FORMAT(comments.timeposted,"%a, %d %b %Y %T CST") AS timeposted, comments.sub_id from comments, users, schedule, types where (schedule.assign_type = types.assign_type) and (schedule.sched_id = comments.sub_id) and (comments.user_id = users.user_id) order by timeposted desc limit 30';
+if($role == 0) {
+
+	$sql = 'select txt, name, email, title, type_name, DATE_FORMAT(comments.timeposted,"%a, %d %b %Y %T CST") AS timeposted, comments.sub_id from comments, users, schedule, types where (schedule.assign_type = types.assign_type) and (schedule.sched_id = comments.sub_id) and (comments.user_id = users.user_id) order by timeposted limit 30';
+
+} else {
+	$sql = 'select txt, name, email, title, type_name, DATE_FORMAT(comments.timeposted,"%a, %d %b %Y %T CST") AS timeposted, comments.sub_id from comments, users, schedule, types where (schedule.assign_type = types.assign_type) and (schedule.sched_id = comments.sub_id) and (comments.user_id = users.user_id) and users.user_id='.$user_id.' order by timeposted limit 30';
+
+}
 
 //echo $sql;
 

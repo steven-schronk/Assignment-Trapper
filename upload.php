@@ -4,6 +4,10 @@ include_once("auth.php");
 
 if (!$_GET["sched"]) { die("No Assignment Sent"); }
 
+$_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
+$_FILES["file"]["name"] = mysql_real_escape_string($_FILES["file"]["name"]);
+$_FILES["file"]["size"] = mysql_real_escape_string($_FILES["file"]["size"]);
+
 $sql = "select count(*) as count, class_id, due_date from schedule where due_date > NOW() and sched_id=".$_GET["sched"];
 
 $result = mysql_query($sql);

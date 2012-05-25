@@ -1,10 +1,10 @@
 <?php
 
-//include_once("auth_root.php");
+include_once("auth_root.php");
+
 include_once("conn.php");
 
 /* TODO: Lock out account if this user keeps hitting this page. */
-
 
 /* get most recent date for assignment change - this will be the publication date */
 $sql = 'select DATE_FORMAT(max(timeposted),"%a, %d %b %Y %T CST") from schedule';
@@ -17,7 +17,30 @@ $pub_date = $row['0'];
 
 //if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
 
-$sql = 'select class_name, title, chapter, type_name, section_id, ava_date, due_date, sched_id, DATE_FORMAT(schedule.timeposted,"%a, %d %b %Y %T CST") AS timeposted, DATE_FORMAT(schedule.timeposted, "%Y%c%d%H%i%S") AS timeposted_num from schedule, class, types where (types.assign_type = schedule.assign_type) and (class.class_id = schedule.class_id) order by schedule.timeposted desc limit 30';
+if($role == 0) {
+	$sql = 'select class_name, title, chapter, type_name, section_id, ava_date, due_date, sched_id, DATE_FORMAT(schedule.timeposted,"%a, %d %b %Y %T CST") AS timeposted, DATE_FORMAT(schedule.timeposted, "%Y%c%d%H%i%S") AS timeposted_num from schedule, class, types where (types.assign_type = schedule.assign_type) and (class.class_id = schedule.class_id) order by schedule.timeposted desc limit 30';
+
+} else {
+	// get list of classes this student is in
+	$classes = "(";
+	$i = 0;
+	$sql = 'select class_id from enrollment where user_id='.$user_id;
+	// echo $sql;
+	$result = mysql_query($sql);
+	if (!$result) { die("SQL ERROR: Get Classes"); }
+	while( $row = mysql_fetch_array($result))
+	{
+		if($i == 0 ) {
+			$classes .= "schedule.class_id=".$row['class_id'];
+		} else {
+			$classes .= " or schedule.class_id=".$row['class_id'];
+		}
+		$i++;
+	}
+	$classes .= ")";
+
+	$sql = 'select class_name, title, chapter, type_name, section_id, ava_date, due_date, sched_id, DATE_FORMAT(schedule.timeposted,"%a, %d %b %Y %T CST") AS timeposted, DATE_FORMAT(schedule.timeposted, "%Y%c%d%H%i%S") AS timeposted_num from schedule, class, types where (types.assign_type = schedule.assign_type) and (class.class_id = schedule.class_id) and '.$classes.' order by schedule.timeposted desc limit 30';
+}
 
 //echo $sql;
 
