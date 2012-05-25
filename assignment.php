@@ -3,20 +3,7 @@
 include_once("auth.php");
 include_once("header.php");
 include_once("time.php");
-
-function need_help($user_id, $sched_id)
-{
-	if(!isset($user_id)) { return -1; }
-
-	$sql = 'select help_me from sched_details where user_id = '.$user_id.' and sched_id = '.$sched_id;
-	$result = mysql_query($sql);
-	
-	if (!$result) { die("SQL ERROR"); }
-
-	$row = mysql_fetch_array($result);
-
-	return $row[0];
-}
+include_once("user_details.php");
 
 if(!isset($_GET["class"])) { die("No Class ID Sent"); }
 
@@ -72,10 +59,15 @@ while($row = mysql_fetch_row($result))
 	if($role != 0 ) {
 
 		if(need_help($user_id, $row[7])) {
-			$html .= '<img src=gfx/flag_red.png></td>';
-		} else { $html .= '<img src=gfx/flag_white.png></td>'; } }
+			$html .= '<img src=gfx/flag_red.png>';
+		} else { $html .= '<img src=gfx/flag_white.png>'; }
 
-	if($role == 0 ) { 
+		if(file_count($user_id, $row[7])) {
+			$html .= '<img src=gfx/star.png></td>';
+		} else { $html .= '<img src=gfx/error.png></td>'; }
+	}
+
+	if($role == 0 ) {
 		$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
 	} else {
 		$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';

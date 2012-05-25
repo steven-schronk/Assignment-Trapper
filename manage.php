@@ -2,55 +2,55 @@
 
 include_once("auth.php");
 include_once("header.php");
+include_once("time.php");
 
 if($role==0) {
 
 $sql = 'select count(*) from users';
 
 $result = mysql_query($sql);
-
 $row = mysql_fetch_row($result);
-
 $user_count = $row[0];
 
 
-$sql = 'select count(*) from schedule';
+$sql = 'select count(*), max(timeposted) from schedule';
 
 $result = mysql_query($sql);
-
 $row = mysql_fetch_row($result);
-
 $assignment_count = $row[0];
+$assignment_max = $row[1];
 
-
-$sql = 'select count(*) from comments';
+$sql ='select count(*), max(timeposted) from comments';
 
 $result = mysql_query($sql);
-
 $row = mysql_fetch_row($result);
-
 $comment_count = $row[0];
+$comment_max = $row[1];
 
 
-$sql = 'select count(*) from filecom';
+$sql = 'select count(*), max(timeposted) from filecom';
 
 $result = mysql_query($sql);
-
 $row = mysql_fetch_row($result);
-
 $filecomm_count = $row[0];
+$filecomm_max = $row[1];
 
-
-$sql = 'select count(*) from files';
+$sql = 'select count(*), max(time_post) from files';
 
 $result = mysql_query($sql);
-
 $row = mysql_fetch_row($result);
-
 $file_count = $row[0];
+$file_max = $row[1];
+
+$sql = 'select count(*) from users where attempts > 100';
+
+$result = mysql_query($sql);
+$row = mysql_fetch_row($result);
+$std_locked = $row[0];
+
 			// ADIMINISTRATOR MENU
 ?>
-			<div class="col2">
+<div class="col2">
 			<h3><img src="gfx/rss.png">Feeds:</h3>
 				<a href="comment_feed.php">Full Comments</a><br>
 				<a href="assignment_feed.php">Assignments Modified</a>
@@ -67,18 +67,19 @@ $file_count = $row[0];
 			<h3><img src="gfx/database.png">System Admin:</h3>
 				<a href="adminer.php">SQL Admin</a><br>
 
-			</div>
-			<div class="col1">
-				<table class="gridtable">
-					<tr><th>Stat</th><th>Value</th></tr>
-					<tr><td>Users:</td><td><?php echo $user_count; ?></td></tr>
-					<tr><td>Assignments:</td><td><?php echo $assignment_count; ?></td></tr>
-					<tr><td>Files:</td><td><?php echo $file_count; ?></td></tr>
-					<tr><td>Comments:</td><td><?php echo $comment_count; ?></td></tr>
-					<tr><td>Line Comments:</td><td><?php echo $filecomm_count; ?></td></tr>
-					<tr><td>Current Time:</td><td><?php echo date("F d, Y h:i" ,time()); ?></td></tr>
-				</table>
-			</div>
+</div>
+<div class="col">
+	<table class="gridtable">
+	<tr><th>Stat</th><th>Value</th><th>Human Time</th><th>Last Updated</th></tr>
+	<tr><td>Files:</td><td><?php echo $file_count; ?></td><td><?php echo absHumanTiming($file_max); ?></td><td><?php echo $file_max; ?></td></tr>
+	<tr><td>File Comments:</td><td><?php echo $filecomm_count; ?></td><td><?php echo absHumanTiming($filecomm_max); ?></td><td><?php echo $filecomm_max; ?></td></tr>
+	<tr><td>Comments:</td><td><?php echo $comment_count; ?></td><td><?php echo absHumanTiming($comment_max); ?></td><td><?php echo $comment_max; ?></td></tr>
+	<tr><td>Assignments:</td><td><?php echo $assignment_count; ?></td><td><?php echo absHumanTiming($assignment_max); ?></td><td><?php echo $assignment_max; ?></td></tr>
+	<tr><td>Users:</td><td colspan=3><?php echo $user_count; ?></td></tr>
+	<tr><td>Users Locked:</td><td colspan=3><?php echo $std_locked; ?></td></tr>
+	<tr><td>Current Time:</td><td colspan=3><?php echo date("F d, Y h:i" ,time()); ?></td></tr>
+	</table>
+</div>
 <?php
 
 } else {		// STUDENT MENU

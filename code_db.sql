@@ -23,7 +23,7 @@ CREATE TABLE comments (
 	sub_id int  NOT NULL,				# submission ID
 	fac_id int,					# faculty identification id for faculty comments
 	role int NOT NULL,				# 0 is prof, 1 is student
-	txt  varchar(256),				# comment about this assignment
+	txt varchar(65536),				# comment about this assignment
 	timeposted timestamp NOT NULL,			# time comment was posted
 	PRIMARY KEY (comment_id)
 );

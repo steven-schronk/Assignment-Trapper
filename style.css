@@ -13,6 +13,12 @@ body {
     font-family: Tahoma, Arial, Helvetica, sans-serif;
     font-size: 15px;
 }
+
+.col {
+	position: relative;
+	float: left;
+	left: 20px;
+}
 .col1 {
     position: relative;
     overflow: hidden;

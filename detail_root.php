@@ -3,6 +3,7 @@
 include_once("auth.php");
 include_once("header.php");
 include_once("time.php");
+include_once("user_details.php");
 
 // prevents students from seeing other's work
 if($role != 0) { $_GET["user"] = $user_id; }
@@ -25,21 +26,44 @@ if($row[0] == 1) { $submission = 'Open'; } else { $submission = 'Closed'; }
 /* get help status for this assignment */
 
 if($role == 0) {
-	$sql = 'select help_me from sched_details where sched_id ='.$_GET["sched"].' and user_id = '.$_GET["user"];
+
+	if($_GET["user"]) { 
+		$sql = 'select help_me from sched_details where sched_id ='.$_GET["sched"].' and user_id = '.$_GET["user"];
+
+		$result = mysql_query($sql);
+
+		$row = mysql_fetch_row($result);
+
+		if($row[0] == 1) {
+			$help_stat = 'Disable';
+			$help_icon = '<img src=gfx/flag_red.png>';
+		} else {
+			$help_stat = 'Enable';
+			$help_icon = '<img src=gfx/flag_white.png>';
+		}
+
+		if(file_count($_GET["user"], $_GET["sched"])) {
+			$file_count .= '<img src=gfx/star.png></td>';
+			} else { $file_count .= '<img src=gfx/error.png></td>'; }
+	}
 } else {
 	$sql = 'select help_me from sched_details where sched_id ='.$_GET["sched"].' and user_id = '.$user_id;
-}
 
-$result = mysql_query($sql);
+	$result = mysql_query($sql);
 
-$row = mysql_fetch_row($result);
+	$row = mysql_fetch_row($result);
 
-if($row[0] == 1) {
-	$help_stat = 'Disable';
-	$help_icon = '<img src=gfx/flag_red.png>';
-} else {
-	$help_stat = 'Enable';
-	$help_icon = '<img src=gfx/flag_white.png>';
+	if($row[0] == 1) {
+		$help_stat = 'Disable';
+		$help_icon = '<img src=gfx/flag_red.png>';
+	} else {
+		$help_stat = 'Enable';
+		$help_icon = '<img src=gfx/flag_white.png>';
+	}
+
+	if(file_count($user_id, $_GET["sched"])) {
+		$file_count .= '<img src=gfx/star.png></td>';
+		} else { $file_count .= '<img src=gfx/error.png></td>'; }
 }
 
 /* get assignment details */
@@ -63,7 +87,8 @@ while($row = mysql_fetch_row($result))
 	// assignment graded?
 	if($row[12]) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
 
-	$html .= $help_icon."</td>";
+	$html .= $help_icon;
+	$html .= $file_count."</td>";
 	$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
 	$html .= '<td>'.absHumanTiming($row[6]).'</td>';
@@ -248,7 +273,6 @@ if($_GET["user"] == '' ) {
 
 	while($row = mysql_fetch_array($result))
 	{
-
 		if($row['role'] != 0) {
 			$comm .= '<div class="comment"><div class="com_head">';
 		} else {
@@ -268,6 +292,8 @@ if($_GET["user"] == '' ) {
 
 		$row['txt'] = htmlspecialchars($row['txt']);
 		$row['txt'] = tab2space($row['txt']);
+		// add breaks to text of comment - for readability
+		$row['txt'] = str_replace("\n", "<br>", $row['txt']);
 
 		$comm .= '<div class="com_body">
 '.$row['txt'].'
@@ -358,9 +384,6 @@ if($role == 0) {
 
 	if ($row['user_id']) { $next_button = '<a href=detail_root.php?sched='.$_GET["sched"].'&user='.$row['user_id'].'><img src="gfx/resultset_next.png" style="border-style: none"></a>'; } else { $next_button = '<img src="gfx/resultset_next_disabled.png" style="border-style: none">'; }
 
-	$next_back_buttons = '<center>'.$back_button;
-	$next_back_buttons .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	$next_back_buttons .= $next_button.'</center>';
 }
 
 ?>
@@ -373,20 +396,22 @@ if($role == 0) {
 
 		<?php if($role != 0 ) { echo "<th>Help</th>"; } ?>
 	</tr>
-
+	<a name="top">
 	<?php echo $html; ?>
 </table>
 <br><br>
-	<?php echo $next_back_buttons; ?>
-
+	
+	<center><?php echo $back_button; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#bottom"><img src="gfx/resultset_down.png" style="border-style: none"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $next_button; ?></center>
 	<?php echo $upload_form; ?>
 
 <br><br>
 	<?php echo $student_list; ?>
 	<?php echo "<h1>".$student_user_name."</h1>"; ?>
 	<?php echo $files; ?>
-	<?php echo $next_back_buttons; ?>
+	<a name="bottom">
+	<center><?php echo $back_button; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#top"><img src="gfx/resultset_up.png" style="border-style: none"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $next_button; ?></center>
 	<?php echo "<h1>".$student_user_name."</h1>"; ?>
+	
 	<?php echo $comm; ?>
 	<?php echo $comment_form; ?>
 

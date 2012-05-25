@@ -4,6 +4,7 @@ include_once("auth.php");
 include_once("header.php");
 include_once("time.php");
 include_once("detail_lib.php");
+include_once("user_details.php");
 
 // files that have been line commented by faculty
 if($role == 0) { // faculty sees list of students names and assignments
@@ -48,7 +49,14 @@ while($row = mysql_fetch_array($result))
 		// assignment graded?
 		if($row['graded']) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
 
-		if($row['help_me']) { $html .= '<img src=gfx/flag_red.png></td>'; } else { $html .= '<img src=gfx/flag_white.png></td>'; }
+		if($row['help_me']) { $html .= '<img src=gfx/flag_red.png>'; } else { $html .= '<img src=gfx/flag_white.png>'; }
+
+		$html .= $help_icon;
+
+		if(file_count($row[4], $row[0])) {
+			$html .= '<img src=gfx/star.png></td>';
+			} else { $html .= '<img src=gfx/error.png></td>'; }
+
 
 		$html .= '<td>'.$row['name'].'</td>';
 
@@ -71,7 +79,14 @@ while($row = mysql_fetch_array($result))
 		// assignment graded?
 		if($row['graded']) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
 
-		if($row['help_me']) { $html .= '<img src=gfx/flag_red.png></td>'; } else { $html .= '<img src=gfx/flag_white.png></td>'; }
+		if($row['help_me']) { $html .= '<img src=gfx/flag_red.png>'; } else { $html .= '<img src=gfx/flag_white.png>'; }
+
+		$html .= $help_icon;
+
+		if(file_count($user_id, $row[0])) {
+			$html .= '<img src=gfx/star.png></td>';
+			} else { $html .= '<img src=gfx/error.png></td>'; }
+
 
 		$html .= '<td><a href="detail_root.php?sched='.$row['sched_id'].'">'.$row['title'].'</a></td><td>'.$row['type_name'].'</td><td>'.$row['chapter'].'</td>';
 
@@ -98,6 +113,7 @@ if(isset($_GET['action']) && isset($_GET['sched']))
 		detail_viewed_update($user_id, $_GET['sched'], 1, "std");
 	}
 	echo '<html><meta http-equiv="refresh" content="0;url=index.php" /></html>';
+	exit();
 }
 ?>
 
