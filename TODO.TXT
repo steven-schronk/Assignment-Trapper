@@ -1,5 +1,23 @@
-Line numbers no aligning properly.
-Improve look and feel of tables in general.
+no SQL injection protection
+Open assignments cannot be posted to.
+Line numbers not aligning properly.
+Assignments modified feed shows all assignments to students.
 Students can see all submissions to assignments.
-RSS feeds for new comments.
+Create basic assignments for first chapter for each class.
+Fix logo on front page of opentextbook.info website.
+Upload new version of MobileC.
+Recheck documentation for MobileC.
+Comb over Assignment Tracker Code looking for bad remnants.
+Backup Assignment Trapper Code.
+
+RSS Feed for modified assignments
+RSS Feed for comments about student code
+
+
+
+Email for created or modified assignments
+Email for late assignments
+Email (to instructor) for comment from student
+
+
 

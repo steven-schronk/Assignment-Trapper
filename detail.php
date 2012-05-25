@@ -118,10 +118,10 @@ while($row = mysql_fetch_row($result))
 
 <h3>Assignment Details</h3>
 
-<table border=1>
-	<thead>
-		<td>Chapter</td><td>Section</td><td>Title</td><td>Type</td><td>Avalaible</td><td>Due</td><td>Submission</td>
-	</thead>
+<table class="gridtable">
+	<tr>
+		<th>Chapter</th><th>Section</th><th>Title</th><th>Type</th><th>Avalaible</th><th>Due</th><th>Submission</th>
+	</tr>
 
 	<?php echo $html; ?>
 	<!--
@@ -146,8 +146,6 @@ while($row = mysql_fetch_row($result))
 <br>
 
 <?php echo $files; ?>
-
-<div class="cmnt_count"><h3>XXXXXXXXXXXX Comment:</h3></div>
 
 <?php echo $comm; ?>
 

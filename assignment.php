@@ -40,7 +40,7 @@ while($row = mysql_fetch_row($result))
 	$html .= '<td><a href="detail.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
 
-	
+	if($role==0) { $html .= '<td><a href="assignment_add.php?sched='.$row[7].'&action=edit">Edit</a></td>'; }
 
 	$html .= '</tr>';
 }
@@ -49,17 +49,13 @@ while($row = mysql_fetch_row($result))
 
 <h3><?php echo $class; ?> Assignments</h3>
 
-<table border=1>
-	<thead>
-		<td>Status</td><td>Title</td><td>Type</td><td>Chapter</td><td>Section</td><td>Avalaible Date</td><td>Due Date</td>
-	</thead>
-
-	<?php echo $html; ?>
-	<!--
+<table class="gridtable">
 	<tr>
-		<td>1</td><td>2</td><td><a href="detail.php">In-Class</a></td><td>07/23/2011 12:00</td><td>07/23/2011 12:00</td><td>-</td>
+		
+			<th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th><th>Avalaible Date</th><th>Due Date</th>
+		<?php if($role==0) { echo '<th>Update</th>'; } ?>
 	</tr>
-	-->
+	<?php echo $html; ?>
 </table>
 
 

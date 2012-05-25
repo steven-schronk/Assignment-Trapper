@@ -1,7 +1,6 @@
 <html>
 
 <script src="general.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" media="all" href="include/style.css" />
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" media="all" href="include/calendar.css" title="win2k-cold-1" />
 

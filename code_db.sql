@@ -25,6 +25,7 @@ CREATE TABLE schedule (
 	section_id varchar(256) NOT NULL,			# section number
 	ava_date  DATETIME NOT NULL,			# date for opening of assignment
 	due_date DATETIME NOT NULL,			# due date for assignment
+	timeposted timestamp NOT NULL,			# time posting
 	PRIMARY KEY (sched_id)
 );
 
@@ -47,6 +48,13 @@ CREATE TABLE class (
 	class_location varchar(256),
 	class_instructor varchar(256) NOT NULL,
 	PRIMARY KEY (class_id)
+);
+
+CREATE TABLE enrollment (
+	enrollment_id int NOT NULL AUTO_INCREMENT,
+	class_id int NOT NULL,
+	user_id int NOT NULL,
+	PRIMARY KEY (enrollment_id)
 );
 
 /*

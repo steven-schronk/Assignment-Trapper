@@ -4,7 +4,7 @@ include_once("auth.php");
 
 $html = "";
 
-$sql = "select * from class";
+$sql = 'select distinct class.class_id, class_name, class_section, class_location, class_instructor from enrollment, class, users where (users.user_id = enrollment.user_id) and (enrollment.class_id = class.class_id) and enrollment.user_id = '.$user_id;
 
 $result = mysql_query($sql);
 
