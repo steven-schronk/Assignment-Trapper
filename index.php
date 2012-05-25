@@ -10,21 +10,23 @@ if($role == 0) { // faculty sees list of students names and assignments
 
 	//$sql = 'select sched_id, title, type_name,  chapter, section_id, ava_date, due_date, graded, NOW()-due_date as due, NOW()-ava_date as ava from schedule, types where (schedule.assign_type = types.assign_type) and sched_id = ANY (select sched_id from sched_details where fac_viewed = 0 or help_me != 0 and user_id = '.$user_id.' group by sched_id) order by due_date desc, ava_date desc, title desc, chapter desc, section_id desc';
 
-	$sql ='select sched_details.sched_id, schedule.title, schedule.chapter, schedule.section_id, sched_details.user_id, users.name, help_me, sched_details.timeposted, NOW()-due_date as due, NOW()-ava_date as ava, due_date from sched_details, schedule, users where (sched_details.sched_id = schedule.sched_id) and (sched_details.user_id = users.user_id) and fac_viewed = 0 or help_me != 0 group by sched_id order by help_me desc, sched_details.timeposted limit 50';
+	$sql ='select sched_details.sched_id, schedule.title, schedule.chapter, schedule.section_id, sched_details.user_id, users.name, help_me, sched_details.timeposted from sched_details, schedule, users where (sched_details.sched_id = schedule.sched_id) and (sched_details.user_id = users.user_id) and (fac_viewed = 0 or help_me != 0) group by sched_id order by help_me desc, sched_details.timeposted limit 50';
 
 	$html = '<table class="gridtable">
 			<tr>
 				<th>#</th><th>Stauts</th><th>Student</th><th>Title</th><th>Chapter</th><th>Section</th>
-				<th>Due Date</th><th>Human Time</th><th>Mark<br>As<br>Read</th>
+				<th>Posted</th><th>Human Time</th><th>Mark<br>As<br>Read</th>
 			</tr>';
 
 } else { // students see list of assignments
-	$sql = 'select sched_id, title, type_name,  chapter, section_id, ava_date, due_date, graded, NOW()-due_date as due, NOW()-ava_date as ava from schedule, types where (schedule.assign_type = types.assign_type) and sched_id = ANY (select sched_id from sched_details where user_viewed = 0 and user_id = '.$user_id.' group by sched_id) order by due_date desc, ava_date desc, title desc, chapter desc, section_id desc';
+	//$sql = 'select sched_id, title, type_name,  chapter, section_id, graded, timeposted from schedule, types where (schedule.assign_type = types.assign_type) and sched_id = ANY (select sched_id from sched_details where user_viewed = 0 and user_id = '.$user_id.' group by sched_id) order by due_date desc, ava_date desc, title desc, chapter desc, section_id desc';
+
+	$sql ='select sched_details.sched_id, schedule.title, schedule.chapter, schedule.section_id, sched_details.user_id, users.name, help_me, sched_details.timeposted from sched_details, schedule, users where (sched_details.sched_id = schedule.sched_id) and (sched_details.user_id = users.user_id) and (user_viewed = 0 and sched_details.user_id = '.$user_id.') group by sched_id order by help_me desc, sched_details.timeposted limit 50';
 
 	$html = '<table class="gridtable">
 			<tr>
-				<th>#</th><th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th><th>Avalaible Date</th>
-				<th>Due Date</th><th>Human Time</th><th>Mark<br>As<br>Read</th>
+				<th>#</th><th>Status</th><th>Title</th><th>Type</th><th>Chapter</th><th>Section</th>
+				<th>Posted</th><th>Human Time</th><th>Mark<br>As<br>Read</th>
 			</tr>';
 }
 
@@ -36,6 +38,8 @@ if (!$result) { die("SQL ERROR"); }
 $count = 0;
 while($row = mysql_fetch_array($result))
 {
+	$random = rand();
+	$random .= time();
 	if($role == 0) {
 		$html .= '<tr><td>'.$row['sched_id'].'</td>';
 		// assignment open?
@@ -44,17 +48,17 @@ while($row = mysql_fetch_array($result))
 		// assignment graded?
 		if($row['graded']) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
 
-		if($row['help_me']) { $html .= '<img src=gfx/flag_red.png></td>'; } else { $html .= '<img src=gfx/email.png></td>'; }
+		if($row['help_me']) { $html .= '<img src=gfx/flag_red.png></td>'; } else { $html .= '<img src=gfx/flag_white.png></td>'; }
 
 		$html .= '<td>'.$row['name'].'</td>';
 
 		$html .= '<td><a href="detail_root.php?sched='.$row['sched_id'].'&user='.$row['user_id'].'">'.$row['title'].'</a></td><td>'.$row['chapter'].'</td>';
 
-		$html .= '<td>'.$row['section_id'].'</td><td>'.$row['due_date'].'</td>';
+		$html .= '<td>'.$row['section_id'].'</td><td>'.$row['timeposted'].'</td>';
 
-		$html .= '<td>'.absHumanTiming($row['due_date']).'</td>';
+		$html .= '<td>'.absHumanTiming($row['timeposted']).'</td>';
 
-		$html .= '<td><a href="index.php?sched='.$row['sched_id'].'&user='.$row['user_id'].'&action=mark">Mark as Read</a></td>';
+		$html .= '<td><a href="index.php?sched='.$row['sched_id'].'&user='.$row['user_id'].'&action=mark&random='.$random.'">Mark as Read</a></td>';
 
 		$html .= '</tr>';
 
@@ -67,22 +71,22 @@ while($row = mysql_fetch_array($result))
 		// assignment graded?
 		if($row['graded']) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
 
-		$html .= '<img src=gfx/email.png></td>';
+		if($row['help_me']) { $html .= '<img src=gfx/flag_red.png></td>'; } else { $html .= '<img src=gfx/flag_white.png></td>'; }
 
 		$html .= '<td><a href="detail_root.php?sched='.$row['sched_id'].'">'.$row['title'].'</a></td><td>'.$row['type_name'].'</td><td>'.$row['chapter'].'</td>';
 
-		$html .= '<td>'.$row['section_id'].'</td><td>'.$row['ava_date'].'</td><td>'.$row['due_date'].'</td>';
+		$html .= '<td>'.$row['section_id'].'</td><td>'.$row['timeposted'].'</td>';
 
-		$html .= '<td>'.absHumanTiming($row['due_date']).'</td>';
+		$html .= '<td>'.absHumanTiming($row['timeposted']).'</td>';
 
-		$html .= '<td><a href="index.php?sched='.$row['sched_id'].'&action=mark">Mark as Read</a></td>';
+		$html .= '<td><a href="index.php?sched='.$row['sched_id'].'&action=mark&random='.$random.'">Mark as Read</a></td>';
 
 		$html .= '</tr>';
 	}
 	$count++;
 }
 
-if($count == 0) { $html = "<center>No New Messages At This Time</center>"; }
+if($count == 0) { $html = "<center><h3>No New Messages At This Time</h3></center>"; }
 
 // set assignment to graded if link on page is clicked
 if(isset($_GET['action']) && isset($_GET['sched']))
@@ -93,13 +97,14 @@ if(isset($_GET['action']) && isset($_GET['sched']))
 	} else {
 		detail_viewed_update($user_id, $_GET['sched'], 1, "std");
 	}
+	echo '<html><meta http-equiv="refresh" content="0;url=index.php" /></html>';
 }
-
 ?>
 
 <h3>Recent Assignment Messages</h3>
 
 	<?php echo $html; ?>
+	<?php if($count > 0) { include("legend.php"); } ?>
 </table>
 
 

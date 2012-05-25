@@ -269,9 +269,9 @@ if($_GET["user"] == '' ) {
 		$row['txt'] = htmlspecialchars($row['txt']);
 		$row['txt'] = tab2space($row['txt']);
 
-		$comm .= '<div class="com_body"><pre>
+		$comm .= '<div class="com_body">
 '.$row['txt'].'
-		</pre></div>
+		</div>
 	</div><br><br>';
 
 	}

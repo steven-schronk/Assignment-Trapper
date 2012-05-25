@@ -1,5 +1,11 @@
 <?php
 
+header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 if($user_id != '') {
 	if($role == 0) { 
 		//$menu = '<a href="index.php">Classes</a> | <a href="manage.php">Manage Accounts</a> | <a href="workflow.php">Workflows</a> | '.$_COOKIE["username"].' | <a href="#" onClick="logout();">Logout</a>';
@@ -32,9 +38,6 @@ if($user_id != '') {
 
 <html>
 <head>
-<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="EXPIRES" CONTENT="<?php echo gmdate('D, d M Y H:i:s') . ' GMT' ?>">
 <script type="text/javascript" src="ajax.js"></script>
 <script type="text/javascript" src="debugger.js"></script>
 <script type="text/javascript" src="general.js"></script>
