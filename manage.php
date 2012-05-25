@@ -13,6 +13,7 @@ if($role==0) {
 			<h3>Links:</h3>
 			<a href="assignment_add.php">Add New Assignment</a><br>
 			<a href="enrollment.php">Enrollment Manager</a><br>
+			<a href="enrollment_new.php">New Enrollment</a><br>
 			<a href="password_change.php">Change Password</a><br>
 <?php
 

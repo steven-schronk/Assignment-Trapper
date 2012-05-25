@@ -58,10 +58,24 @@ $sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 
 
 $result = mysql_query($sql);
 
-if (!$result) { die("SQL ERROR"); }
+if (!$result) { die("SQL ERROR: File List"); }
 
 while($row = mysql_fetch_row($result))
 {
+	// get all comments for this particular file
+	$sql = "select * from filecom where file_id=".$row[0]." order by line_no, timeposted";
+	
+	$filecom = mysql_query($sql);
+	if (!$filecom) { die("SQL ERROR: File Comments"); }
+
+	// only get first line comment
+	$filecoms = mysql_fetch_row($filecom);
+
+	// after that, we only get line comments as they are needed
+	//if(
+
+	// TODO: COMPLETE GETTING FILE COMMENTS
+
 	$code = $row[5];
 	/* escape open and close symbols <> */
 	/*
@@ -83,15 +97,23 @@ while($row = mysql_fetch_row($result))
 	/* add line numbers to code */
 	$lines = explode("\n", $code);
 
+	// lines of code in file
 	$i = 1; $code = "";
 	foreach($lines AS $line)
 	{
-		//$code .= "\n".$i."|";
-		if($line == '') { $code .= "<div id='line' class='line'><span class='line_num'>".$i."</span><pre id='line_dat' class='line_dat'> </pre></div>\n";
-		} else {         $code .= "<div id='line' class='line'><span class='line_num'>".$i."</span><pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
+		// comment lies in here if present and empty form hides here if not...
+		//$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'><img src='gfx/down_arrow.png'>Data Here</div>";
+		$code .= "<div id='line_com_".$i."' onClick='line_comment();' class='line_comment'>";
+		$code .= "<img src='gfx/down_arrow.png'><input id='line_com_val_".$i."' type=text size=100>&nbsp;&nbsp;";
+		$code .= "<button onClick='line_comment_save(\"line_com_val_".$i."\");'>Save</button>&nbsp;&nbsp;<button onClick='line_comment_cancel(\"line_com_".$i."\");'>Cancel</button></div>";
+
+		$code .= "<div id='line' onClick='line_comment(\"line_com_".$i."\");' class='line'><span class='line_num'>".$i."</span>";
+		if($line == '') { $code .= "<pre id='line_dat' class='line_dat'> </pre></div>\n";
+		} else {          $code .= "<pre id='line_dat' class='line_dat'>".$line."</pre></div>\n"; }
 		$i++;
 	}
 
+	// header for file
 	$files .= '<div class="file">
 		<div class="file_head"><img src="gfx/page_white_gear.png">
 			<span class="fname">'.$row[2].'</span>
@@ -106,7 +128,7 @@ while($row = mysql_fetch_row($result))
 
 			</div>
 		</div>
-	</div>';
+	</div><br><br>';
 }
 
 /* get comments for this assignment */
@@ -162,6 +184,8 @@ while($row = mysql_fetch_array($result))
 <br>
 
 <?php echo $files; ?>
+
+<br><br>
 
 <?php echo $comm; ?>
 

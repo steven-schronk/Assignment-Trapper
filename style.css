@@ -33,7 +33,7 @@ table.gridtable td {
 .line_numbers{background-color:#ececec;color:#aaa;padding:1em .5em;border-right:1px solid #ddd;text-align:right;}
 
 .file {border:1px solid #ddd; }
-.file_head {  padding-left: 15px; padding-top: 3px; border-bottom: 1px solid #ddd; background-image: url(gfx/bg_green.png); background-repeat: repeat-x;  }
+.file_head {  padding-left: 15px; padding-top: 3px; border-bottom: 1px solid #ddd; background-image: url(gfx/bg_green.png); background-repeat: repeat-x; border-top: 2px solid #000; }
 
 .comment {border:1px solid #ddd; width: 95%; margin-left: 10px; margin-right: 10px;}
 .com_body { padding-left: 15px; }
@@ -104,4 +104,14 @@ table.gridtable td {
 	text-align: left;
 	color: #aaa;
 	width: 40px;
+}
+
+.line_comment {
+	border-top: 1px solid #000;
+	display: none;
+	padding-left: 40px;
+	padding-top: 8px;
+	padding-bottom: 5px;
+	color: #1782b8;
+	background-color: #ddd;
 }
