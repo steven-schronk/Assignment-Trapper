@@ -54,12 +54,12 @@ include 'include/std_functions.php';
 		$sql .= ', timeposted=NOW()';
 		$sql .= ' where sched_id='.$_GET['sched']; 
 	
-		echo $sql;
-	echo "Got Here";
+		//echo $sql;
+	//echo "Got Here";
 		$result = mysql_query($sql);
 		if (!$result) { die("SQL ERROR"); }
 			echo '<html><head></head>
-			<body>			<META HTTP-EQUIV="Refresh" CONTENT="4" URL="output.php">
+			<body>			<META HTTP-EQUIV="Refresh" CONTENT="0" URL="output.php">
 				<center>
 					<div id="green_box">
 						<br />
@@ -136,7 +136,7 @@ $section_id = mysql_real_escape_string($section_id);
 if( $_POST['ava_date'] == "" ) { $ava_date = todays_date(); } else { $ava_date = $_POST['ava_date']; }
 if( $_POST['due_date'] == "" ) { $ava_date = todays_date(); } else { $ava_date = $_POST['due_date']; }
 if($_GET['action'] == "edit") {
-	$sql = "select chapter, section_id, title, schedule.class_id, class_name, schedule.assign_type, type_name, ava_date, due_date, sched_id, type_name, class_name from schedule, types, class where (schedule.assign_type = types.assign_type) and (class.class_id = schedule.sched_id) and sched_id=". $_GET['sched'];
+	$sql = "select chapter, section_id, title, schedule.class_id, class_name, schedule.assign_type, ava_date, due_date, sched_id, type_name,  class_name from schedule, class, types  where (schedule.assign_type = types.assign_type) and (schedule.class_id = class.class_id) and sched_id=". $_GET['sched'];
 	$result = mysql_query($sql);
 
 	//echo $sql;
