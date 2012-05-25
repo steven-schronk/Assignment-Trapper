@@ -1,7 +1,7 @@
 change password does not work in Internet Explorer
-cannot hot enter for login credentials form
+cannot use "enter" key for login credentials form
 files not listing in correct order on details page
-send email when files are posted
+Status incorrect on assignment.php page when assignment has not opened yet.
 
 
 cannot recover password for students

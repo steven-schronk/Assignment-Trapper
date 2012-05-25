@@ -54,7 +54,9 @@ $breadcrumb = '<a href=assignment.php?class='.$row['class_id'].'>'.$row['class_n
 
 /* get latest versions of each file for this assignment */
 
-$sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$user_id.' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
+// select distinct file_name, max(file_id) from files group by file_name;
+
+$sql = 'select max(file_id), time_post, file_name, file_size, time_post, file_1 from files where user_id='.$user_id.' and sched_id='.$_GET["sched"].' group by file_name';
 
 //echo $sql;
 
@@ -150,7 +152,7 @@ while($row = mysql_fetch_array($result))
 
 <table class="gridtable">
 	<tr>
-		<th>Chapter</th><th>Section</th><th>Title</th><th>Type</th><th>Avalaible</th><th>Due</th><th>Submission</th>
+		<th>Chapter</th><th>Title</th><th>Section</th><th>Type</th><th>Avalaible</th><th>Due</th><th>Submission</th>
 	</tr>
 
 	<?php echo $html; ?>

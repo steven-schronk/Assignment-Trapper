@@ -1,10 +1,10 @@
 <?php
 
-include_once("header.php");
+include_once("auth.php");
 
 include_once("conn.php");
 
-if($_COOKIE["username"]) { $username = $_COOKIE["username"]; } else { $username = $_POST['password']; }
+if($_COOKIE["username"]) { $username = $_COOKIE["username"]; } else { $username = $_POST['username']; }
 
 $username = mysql_real_escape_string($username);
 
@@ -57,7 +57,9 @@ if($error_count == '0') {
 		/* page where we will go next */
 		echo "Password Changed";
 		/* set cookie to new username and password*/
-		
+		setcookie("username", $_COOKIE["username"]);
+		setcookie("password", $_POST['new_password_1']);
+
 		/* move to classes page */
 		echo '<html><meta http-equiv="refresh" content="0; index.php" /></html>';
 		exit;
@@ -83,7 +85,7 @@ You must change your password to continue.
 	<tr><td>new password:</td><td><input name="new_password_1" type="password"></td></tr>
 	<tr><td>new password (again):</td><td><input name="new_password_2" type="password"></td></tr>
 </table><br>
-<button>Update</button>
+<input type="submit" value="Update">
 <br>
 <div id=error style='color: #f00;'><?php echo $error; ?></div>
 </center>

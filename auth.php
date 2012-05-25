@@ -9,7 +9,7 @@ if(!isset($_COOKIE["password"])) { include("login.php"); exit; }
 $_COOKIE["username"] = mysql_real_escape_string($_COOKIE["username"]);
 $_COOKIE["password"] = mysql_real_escape_string($_COOKIE["password"]);
 
-$sql = "select count(*), user_id, role, name, first_login from users where email='". $_COOKIE["username"]. "' and password=SHA(\"".$_COOKIE["password"]."\")";
+$sql = "select count(*), user_id, role, name, first_login, email from users where email='". $_COOKIE["username"]. "' and password=SHA(\"".$_COOKIE["password"]."\")";
 
 //echo $sql;
 
@@ -30,6 +30,7 @@ $user_id = $row[1];
 $role = $row[2];
 $user_name = $row[3];
 $first_login = $row[4];
+$user_email = $row[5];
 
 /* if this is your first login, you MUST change password */
 if($first_login == 1) { include("password_change.php"); exit; }

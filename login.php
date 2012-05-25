@@ -6,7 +6,7 @@
 	<tr><td>e-mail:</td><td><input type="text" id="username"></td></tr>
 	<tr><td>password:</td><td><input type="password" id="password"></td></tr>
 </table><br>
-<input type="submit" name="submit" value="Login" onClick="set_cookie();"/>
+<input type="submit" value="Login" onClick="set_cookie();"/>
 </center>
 </form>
 

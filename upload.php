@@ -2,6 +2,7 @@
 
 include_once("auth.php");
 
+
 if (!$_GET["sched"]) { die("No Assignment Sent"); }
 
 $_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
@@ -48,6 +49,35 @@ $result = mysql_query($sql);
 
 if (!$result) { die("SQL ERROR"); }
 
-echo "Data Posted Sucessfully";
+// send message to user as reciept of file
+
+$uid = md5(uniqid(time()));
+
+$from_name = "Assignment Trapper";
+$from_mail = "noreply@opentextbook.info";
+$filename = $_FILES["file"]["name"];
+
+$message  = "The attached file has been posted to an assignment.";
+
+$header = "From: ".$from_name." <".$from_mail.">\r\n";
+$header .= "Reply-To: ".$replyto."\r\n";
+$header .= "MIME-Version: 1.0\r\n";
+$header .= "Content-Type: multipart/mixed; boundary=\"".$uid."\"\r\n\r\n";
+$header .= "This is a multi-part message in MIME format.\r\n";
+$header .= "--".$uid."\r\n";
+$header .= "Content-type:text/plain; charset=iso-8859-1\r\n";
+$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+$header .= $message."\r\n\r\n";
+$header .= "--".$uid."\r\n";
+$header .= "Content-Type: text/plain; name=\"".$filename."\"\r\n"; // use different content types here
+//$header .= "Content-Transfer-Encoding: base64\r\n";
+$header .= "Content-Disposition: attachment; filename=\"".$filename."\"\r\n\r\n";
+$header .= $data."\r\n\r\n";
+$header .= "--".$uid."--";
+
+mail($user_email, "File Received", "", $header);
+
+/* move to classes page */
+echo '<html><meta http-equiv="refresh" content="0; detail.php?sched='.$_GET["sched"].'" />Data Posted Sucessfully</html>';
 
 ?> 
