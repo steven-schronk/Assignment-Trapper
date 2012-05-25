@@ -55,6 +55,10 @@ if (!$result) { die("SQL ERROR"); }
 $i = 0;
 while($row = mysql_fetch_array($result))
 {
+
+	$row['title'] = htmlspecialchars($row['title']);
+	$row['type_name'] = htmlspecialchars($row['title']);
+
 	$items .= '
         <item>
                 <title>'.$row['title'].' - '.$row['type_name'].'</title>
