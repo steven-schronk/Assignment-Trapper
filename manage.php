@@ -76,6 +76,7 @@ $file_count = $row[0];
 					<tr><td>Files:</td><td><?php echo $file_count; ?></td></tr>
 					<tr><td>Comments:</td><td><?php echo $comment_count; ?></td></tr>
 					<tr><td>Line Comments:</td><td><?php echo $filecomm_count; ?></td></tr>
+					<tr><td>Current Time:</td><td><?php echo date("F d, Y h:i" ,time()); ?></td></tr>
 				</table>
 			</div>
 <?php

@@ -2,9 +2,27 @@
 
 if($user_id != '') {
 	if($role == 0) { 
-		$menu = '<a href="index.php">Classes</a> | <a href="manage.php">Manage Accounts</a> | <a href="workflow.php">Workflows</a> | '.$_COOKIE["username"].' | <a href="#" onClick="logout();">Logout</a>';
+		//$menu = '<a href="index.php">Classes</a> | <a href="manage.php">Manage Accounts</a> | <a href="workflow.php">Workflows</a> | '.$_COOKIE["username"].' | <a href="#" onClick="logout();">Logout</a>';
+
+		$menu = '<div class="menu">
+			<ul>
+        			<li><a href="index.php">Classes</a></li>
+			        <li><a href="manage.php">Manage Accounts</a></li>
+        			<li><a href="workflow.php">Workflows</a></li>
+				<li><a href="#" onClick="logout();">Logout</a></li>
+				<li>'.$_COOKIE["username"].'</li>
+			</ul></div>';
+
 	} else {
-		$menu = '<a href="index.php">Classes</a> | <a href="manage.php">Manage Account</a> | '.$_COOKIE["username"].' | <a href="#" onClick="logout();">Logout</a>';
+		//$menu = '<a href="index.php">Classes</a> | <a href="manage.php">Manage Account</a> | '.$_COOKIE["username"].' | <a href="#" onClick="logout();">Logout</a>';
+		$menu = '<div class="menu">
+			<ul>
+        			<li><a href="index.php">Classes</a></li>
+			        <li><a href="manage.php">Manage Account</a></li>
+				<li><a href="#" onClick="logout();">Logout</a></li>
+				<li>'.$_COOKIE["username"].'</li>
+			</ul></div>';
+
 	}
 } else {
 	$menu = '';

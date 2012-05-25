@@ -1,18 +1,8 @@
-loops when posting new assignments from detail.php
-change password does not work in Internet Explorer
 cannot use "enter" key for login credentials form
-due dates and posting dates in more readable format
 
 cannot recover password for students
-Line numbers not aligning properly.
-Create basic assignments for first chapter for each class.
-Fix logo on front page of opentextbook.info website.
-Backup Assignment Trapper Code.
-Put clock on manage account page
 
 Email for created or modified assignments
 Email for late assignments
 Email (to instructor) for comment from student
-
-
 
