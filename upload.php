@@ -1,7 +1,7 @@
 <?php
 
 include_once("auth.php");
-include_once("header.php");
+//include_once("header.php");
 
 if (!$_GET["sched"]) { die("No Assignment Sent"); }
 
@@ -80,11 +80,11 @@ mail($user_email, "File Received", "", $header);
 /* move to classes page */
 
 
-echo "Data Posted Sucessfully<br><br>";
+//echo "Data Posted Sucessfully<br><br>";
 
-echo 'Click <a href=detail_root.php?sched='.$_GET["sched"].'>Here</a> To Return to Assignment Details';
+//echo 'Click <a href=detail_root.php?sched='.$_GET["sched"].'>Here</a> To Return to Assignment Details';
 
-
+echo '<html><meta http-equiv="refresh" content="0;url=detail_root.php?sched='.$_GET["sched"].'" /></html>';
 //echo '<html><meta http-equiv="refresh" content="0; detail.php?sched='.$_GET["sched"].'" />Data Posted Sucessfully</html>';
 
 ?> 

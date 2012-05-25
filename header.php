@@ -9,8 +9,7 @@ if($user_id != '') {
         			<li><a href="index.php">Classes</a></li>
 			        <li><a href="manage.php">Manage Accounts</a></li>
         			<li><a href="workflow.php">Workflows</a></li>
-				<li><a href="#" onClick="logout();">Logout</a></li>
-				<li><a href="#">'.$_COOKIE["username"].'</a></li>
+				<li><a href="#" onClick="logout();">'.$_COOKIE["username"].'</a></li>
 			</ul></div>';
 
 	} else {
@@ -19,8 +18,7 @@ if($user_id != '') {
 			<ul>
         			<li><a href="index.php">Classes</a></li>
 			        <li><a href="manage.php">Manage Account</a></li>
-				<li><a href="#" onClick="logout();">Logout</a></li>
-				<li><a href="#">'.$_COOKIE["username"].'</a></li>
+				<li><a href="#" onClick="logout();">'.$_COOKIE["username"].'</a></li>
 			</ul></div>';
 
 	}

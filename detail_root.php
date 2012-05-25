@@ -4,8 +4,6 @@ include_once("auth.php");
 include_once("header.php");
 include_once("time.php");
 
-//if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
-
 // prevents students from seeing other's work
 if($role != 0) { $_GET["user"] = $user_id; }
 
@@ -299,9 +297,7 @@ if($row[0] == 1) {
 
 if($role == 0) {
 
-// list of all students alphabetically in this class
-// select enrollment.user_id, name  from schedule, enrollment, users where (schedule.class_id = enrollment.class_id) and (enrollment.user_id = users.user_id) and sched_id =1 order by name, email, user_id;
-
+	// list of all students alphabetically in this class
 	$sql = 'select enrollment.user_id, name  from schedule, enrollment, users where (schedule.class_id = enrollment.class_id) and (enrollment.user_id = users.user_id) and sched_id = '.$_GET["sched"].' and name < "'.$student_user_name.'" order by name desc, email desc, user_id desc limit 1';
 
 	$result = mysql_query($sql);

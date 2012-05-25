@@ -1,7 +1,7 @@
 <?php
 
 include_once("auth.php");
-include_once("header.php");
+//include_once("header.php");
 
 if (!$_GET["comment"]) { die("No Comment Sent");     }
 if (!$_GET["sched"])   { die("No Schedule ID Sent"); }
@@ -53,15 +53,15 @@ mail("steven.schronk@my.tccd.edu", "Comment About Assignment", "", $header);
 
 */
 
-echo "<br>".$header."<br>";
+//echo "<br>".$header."<br>";
 
-echo "Data Posted Sucessfully<br><br>";
+//echo "Data Posted Sucessfully<br><br>";
 
-echo 'Click <a href=detail_root.php?sched='.$_GET["sched"].'>Here</a> To Return to Assignment Details';
+//echo 'Click <a href=detail_root.php?sched='.$_GET["sched"].'>Here</a> To Return to Assignment Details';
 
-//echo '<html><meta http-equiv="refresh" content="0; detail.php?sched='.$_GET["sched"].'" /></html>';
+//echo '<html><meta http-equiv="refresh" content="5;detail_root.php?sched='.$_GET["sched"].'" /></html>';
+echo '<html><meta http-equiv="refresh" content="0;url=detail_root.php?sched='.$_GET["sched"].'" /></html>';
 
 }
-
 
 ?>
