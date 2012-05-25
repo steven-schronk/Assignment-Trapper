@@ -1,14 +1,17 @@
+landing after comment not correct - return to details page
+cannot change password for students
+cannot recover password for students
+not required to change password on first login
 no SQL injection protection
-Open assignments cannot be posted to.
 Line numbers not aligning properly.
 Assignments modified feed shows all assignments to students.
-Students can see all submissions to assignments.
 Create basic assignments for first chapter for each class.
 Fix logo on front page of opentextbook.info website.
 Upload new version of MobileC.
 Recheck documentation for MobileC.
 Comb over Assignment Tracker Code looking for bad remnants.
 Backup Assignment Trapper Code.
+Put clock on manage account page
 
 RSS Feed for modified assignments
 RSS Feed for comments about student code

@@ -8,16 +8,16 @@ if(!isset($_GET["class"])) { die("No Class ID Sent"); }
 
 $class = "";
 
-$sql = "select class_name from class where class_id =". $_GET['class'];
+$sql = "select class_name, class_id from class where class_id =". $_GET['class'];
 
 $result = mysql_query($sql);
 
 if (!$result) { die("SQL ERROR"); }
 
-while($row = mysql_fetch_row($result))
-{
-	$class .= $row[0];
-}
+$row = mysql_fetch_array($result);
+
+$breadcrumb =  '<a href=assignment.php?class='.$row['class_id'].'>'.$row['class_name'].'</a>&nbsp;';
+
 
 /* get list of assignments */
 $html = "";
@@ -37,7 +37,12 @@ while($row = mysql_fetch_row($result))
 
 	if($row[8] > 0) { $html .= "<td><img src=gfx/bullet_delete.png></td>"; } else { $html .= "<td><img src=gfx/bullet_add.png></td>"; }
 
-	$html .= '<td><a href="detail.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
+	if($role == 0 ) { 
+		$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
+	} else {
+		$html .= '<td><a href="detail.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
+	}
+
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
 
 	if($role==0) { $html .= '<td><a href="assignment_add.php?sched='.$row[7].'&action=edit">Edit</a></td>'; }
@@ -47,7 +52,7 @@ while($row = mysql_fetch_row($result))
 
 ?>
 
-<h3><?php echo $class; ?> Assignments</h3>
+<h3><?php echo $breadcrumb; ?> -> All Assignments</h3>
 
 <table class="gridtable">
 	<tr>

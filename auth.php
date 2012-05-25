@@ -2,13 +2,13 @@
 
 include_once("conn.php");
 
-include("header.php");
-
 /* verify username and password - do not pass if incorrect */
 if(!isset($_COOKIE["username"])) { include("login.php"); exit; }
 if(!isset($_COOKIE["password"])) { include("login.php"); exit; }
 
-$sql = "select count(*), user_id, role, name from users where email='". $_COOKIE["username"]. "' and password=SHA('".$_COOKIE["password"]."')";
+$sql = "select count(*), user_id, role, name, first_login from users where email='". $_COOKIE["username"]. "' and password=SHA(\"".$_COOKIE["password"]."\")";
+
+//echo $sql;
 
 $result = mysql_query($sql);
 
@@ -25,8 +25,14 @@ if($row[0] < 1)  { include("login.php"); exit; }
 $user_id = $row[1];
 $role = $row[2];
 $user_name = $row[3];
+$first_login = $row[4];
+
+/* if this is your first login, you MUST change password */
+if($first_login == 1) { include("password_change.php"); exit; }
 
 if($user_id == NULL) { die("User ID Not Set For This User. Contact Technical Support."); }
+
+include("header.php");
 
 ?>
 

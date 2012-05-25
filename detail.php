@@ -24,25 +24,32 @@ while($row = mysql_fetch_row($result))
 	$html .= '<td><a href="detail.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';
 	$html .= '<td>'.$row[1].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td>';
 	$html .= '</tr>';
-	if($row[7] > 0) { $submission = 'disabled=true'; }
 }
 
-/*
-$html = "";
+/* determine if assignment is still open */
 
-$sql = "select chapter, section_id, title, class_id, assign_type, ava_date, due_date, NOW()-due_date as status from schedule where sched_id=".$_GET["sched"]." order by due_date desc, ava_date desc";
+$sql = 'select count(*) from schedule where ava_date < NOW() and due_date > NOW() and sched_id ='.$_GET["sched"];
+
+$result = mysql_query($sql);
+
+$row = mysql_fetch_row($result);
+
+if($row[0] == 1) { $submission = ''; } else { $submission = 'disabled=true'; }
+
+
+/* get class this assignment is from for breadcrumbs */
+$sql = 'select schedule.class_id, class.class_name from schedule, class where (schedule.class_id = class.class_id) and schedule.sched_id = '.$_GET["sched"];
+
+//echo $sql;
 
 $result = mysql_query($sql);
 
 if (!$result) { die("SQL ERROR"); }
 
-while($row = mysql_fetch_row($result))
-{
-	$html .= '<tr><td>'.$row[0].'</td><td>'.$row[1].'</td><td>'.$row[2].'</td>';
-	$html .= '<td>'.$row[3].'</td><td>'.$row[4].'</td><td>'.$row[5].'</td><td>'.$row[6].'</td></tr>';
-	if($row[7] > 0) { $submission = 'disabled=true'; }
-}
-*/
+$row = mysql_fetch_array($result);
+
+$breadcrumb = '<a href=assignment.php?class='.$row['class_id'].'>'.$row['class_name'].'</a>&nbsp;';
+
 /* get latest versions of each file for this assignment */
 
 $sql = 'select file_id, max(time_post), file_name, file_size, time_post, file_1 from files where user_id='.$user_id.' and sched_id='.$_GET["sched"].' group by file_name order by file_name;';
@@ -76,8 +83,8 @@ while($row = mysql_fetch_row($result))
 			<span class="fname">'.$row[2].'</span>
 			<span class="fsize">'.$row[3].'B</span>
 			<span class="fdate">'.$row[4].'</span>
-			<span class="fedit"><button>Edit</button></span>
-			<span class="fraw"><button>Raw</button></span>
+			<!-- <span class="fedit"><button>Edit</button></span>
+			<span class="fraw"><button>Raw</button></span>-->
 		</div>
 		<div class="highlight">
 			<pre class="sh_cpp">
@@ -91,7 +98,9 @@ while($row = mysql_fetch_row($result))
 
 /* get comments for this assignment */
 
-$sql = 'select comment_id, name, sub_id, txt, timeposted, role from comments, users where (users.user_id = comments.user_id) and sub_id='.$_GET["sched"].' order by timeposted';
+//$sql = 'select comment_id, name, sub_id, txt, timeposted, comments.role from comments, users where (users.user_id = comments.user_id) and comments.user_id='.$user_id.' and sub_id='.$_GET["sched"].' order by timeposted';
+
+$sql = 'select comment_id, stdusers.name, sub_id, fac_id, facusers.name as facname, txt, timeposted, comments.role from users stdusers,comments LEFT JOIN users facusers on (facusers.user_id = comments.fac_id) where (stdusers.user_id = comments.user_id) and comments.user_id='.$user_id.' and sub_id='.$_GET["sched"].' order by timeposted';
 
 //echo $sql;
 
@@ -99,16 +108,21 @@ $result = mysql_query($sql);
 
 if (!$result) { die("SQL ERROR"); }
 
-while($row = mysql_fetch_row($result))
+while($row = mysql_fetch_array($result))
 {
-
 	$comm .= '<div class="comment"><div class="com_head">';
 	
-	if($row[5] == 0) { $comm .= '<img src="gfx/user_suit.png">'; } else { $comm .= '<img src="gfx/user_green.png">'; }
+	if($row['facname']) { $comm .= '<img src="gfx/user_suit.png">'; } else { $comm .= '<img src="gfx/user_green.png">'; }
+	
+	if(!$row['facname']) { 
+		$comm .= '<span class="com_name">'.$row['name'].'</span>';
+	} else {
+		$comm .= '<span class="com_name">'.$row['facname'].'</span>';
+	}
 
-	$comm .= '<span class="com_name">'.$row[1].'</span><span class="com_date">'.$row[4].'</span></div>
+	$comm .= '<span class="com_date">'.$row['timeposted'].'</span></div>
 	<div class="com_body"><pre>
-'.$row[3].'
+'.$row['txt'].'
 	</pre></div>
 </div><br><br>';
 
@@ -116,7 +130,7 @@ while($row = mysql_fetch_row($result))
 
 ?>
 
-<h3>Assignment Details</h3>
+<h3><?php echo $breadcrumb; ?> -> Assignment Details</h3>
 
 <table class="gridtable">
 	<tr>
@@ -124,19 +138,8 @@ while($row = mysql_fetch_row($result))
 	</tr>
 
 	<?php echo $html; ?>
-	<!--
-	<tr>
-		<td>1</td><td>2</td><td><a href="detail.php">In-Class</a></td><td>07/23/2011 12:00</td><td>07/23/2011 12:00</td><td>-</td>
-	</tr>
-	-->
 </table>
 <br>
-
-<!--<ol>
-	<li>#include &lt;stdio.h&gt;</li>
-	<li>	main() { printf(&quot;Hello World&quot;); }</li>
-	<li>more stuff here!!!</li>
-</ol>-->
 
 <form action='upload.php?sched=<?php echo $_GET["sched"]; ?>' method="post" enctype="multipart/form-data">
 <input type="file" name="file" size="40" <?php echo $submission; ?>><br><br>

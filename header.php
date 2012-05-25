@@ -1,3 +1,9 @@
+<?php
+
+if($user_id != '') { $menu = '<a href="index.php">Classes</a> | <a href="manage.php">Manage Account</a> | '.$_COOKIE["username"].' | <a href="#" onClick="logout();">Logout</a>'; } else { $menu = ''; }
+
+?>
+
 <html>
 
 <script src="general.js" type="text/javascript"></script>
@@ -18,7 +24,7 @@
 <h2><img src="gfx/bricks.png">Assignment Trapper</h2>
 <div class="header">
 	<div class="menu">
-	<a href="index.php">Classes</a> | <a href="manage.php">Manage Account</a> | <?php echo $_COOKIE["username"]; ?> | <a href="#" onClick='logout();'>Logout</a>
+		<?php echo $menu; ?>
 	</div>
 </div>
 

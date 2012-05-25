@@ -9,10 +9,12 @@ USE trapper;
 
 CREATE TABLE comments (
 	comment_id int NOT NULL AUTO_INCREMENT,
-	user_id int NOT NULL,				# user ID
+	user_id int NOT NULL,				# user ID - person who commented
 	sub_id int  NOT NULL,				# submission ID
+	fac_id int,					# faculty identification id for faculty comments
+	role int NOT NULL,				# 0 is prof, 1 is student
 	txt  varchar(256),				# comment about this assignment
-	timeposted timestamp NOT NULL,			# time posting
+	timeposted timestamp NOT NULL,			# time comment was posted
 	PRIMARY KEY (comment_id)
 );
 
@@ -84,7 +86,7 @@ CREATE TABLE users (
 	password varchar(128) NOT NULL,			#
 	name varchar(128) NOT NULL,			# name of user
 	attempts int NOT NULL,				# number of bad attempts to login
-	role int NOT NULL,				# 0 is root, 1 is student
+	role int NOT NULL,				# 0 is prof, 1 is student
 	first_login int NOT NULL,			# 0 is false, 1 is true
 	PRIMARY KEY (user_id)
 );
