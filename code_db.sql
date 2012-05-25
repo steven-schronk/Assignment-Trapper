@@ -7,6 +7,16 @@
 CREATE DATABASE trapper;
 USE trapper;
 
+CREATE TABLE filecom (
+	filecom_id int NOT NULL AUTO_INCREMENT,
+	file_id int NOT NULL,				# file ID
+	line_no int NOT NULL,				# line number in file
+	user_id int NOT NULL,				# user who made the comment
+	txt  varchar(128),				# comment made about line
+	timeposted timestamp NOT NULL,			# time comment was posted
+	PRIMARY KEY (filecom_id)
+);
+
 CREATE TABLE comments (
 	comment_id int NOT NULL AUTO_INCREMENT,
 	user_id int NOT NULL,				# user ID - person who commented
@@ -23,8 +33,8 @@ CREATE TABLE schedule (
 	class_id int NOT NULL,				# class section number
 	assign_type int NOT NULL,			# type of assignment
 	title varchar(256) NOT NULL,			# title of assignment
-	chapter varchar(256) NOT NULL,				# chapter number
-	section_id varchar(256) NOT NULL,			# section number
+	chapter varchar(256) NOT NULL,			# chapter number
+	section_id varchar(256) NOT NULL,		# section number
 	ava_date  DATETIME NOT NULL,			# date for opening of assignment
 	due_date DATETIME NOT NULL,			# due date for assignment
 	timeposted timestamp NOT NULL,			# time posting

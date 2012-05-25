@@ -95,7 +95,6 @@ while($row = mysql_fetch_row($result))
 	</div>';
 }
 
-
 /* get comments for this assignment */
 
 //$sql = 'select comment_id, name, sub_id, txt, timeposted, comments.role from comments, users where (users.user_id = comments.user_id) and comments.user_id='.$user_id.' and sub_id='.$_GET["sched"].' order by timeposted';
