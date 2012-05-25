@@ -29,6 +29,7 @@ if (!$result) { die("SQL ERROR"); }
 $i = 0;
 while($row = mysql_fetch_array($result))
 {
+	$row['txt'] = htmlspecialchars($row['txt']);
 	$items .= '
         <item>
                 <title>'.$row['name'].' - '.$row['title'].' - '.$row['type_name'].'</title>

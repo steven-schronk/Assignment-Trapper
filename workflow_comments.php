@@ -6,7 +6,7 @@ include_once("time.php");
 
 if($role != 0) { die("Account \"".$user_name."\" Is Not Authorized To View This Page.<br><br>This Event Will Be Logged And Reported."); }
 
-$sql = 'select txt, name, email, title, type_name, DATE_FORMAT(comments.timeposted,"%a, %d %b %Y %T CST") AS timeposted, comments.sub_id, schedule.sched_id, comments.user_id from comments, users, schedule, types where (schedule.assign_type = types.assign_type) and (schedule.sched_id = comments.sub_id) and (comments.user_id = users.user_id) order by timeposted limit 30';
+$sql = 'select txt, name, email, title, type_name, DATE_FORMAT(comments.timeposted,"%a, %d %b %Y %T CST") AS timeposted, comments.sub_id, schedule.sched_id, comments.user_id from comments, users, schedule, types where (schedule.assign_type = types.assign_type) and (schedule.sched_id = comments.sub_id) and (comments.user_id = users.user_id) order by timeposted limit 75';
 
 
 //$sql = 'select txt, name, email, title, type_name, DATE_FORMAT(comments.timeposted,"%a, %d %b %Y %T CST") AS timeposted, comments.sub_id, schedule.sched_id, comments.user_id from comments, users, schedule, types where (schedule.assign_type = types.assign_type) and (schedule.sched_id = comments.sub_id) and (comments.user_id = users.user_id) UNION select txt from filecom order by timeposted limit 30';

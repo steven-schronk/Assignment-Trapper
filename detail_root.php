@@ -146,6 +146,8 @@ if($_GET["user"] == '' ) {
 			//echo $row2['file_name'];
 			$code = $row2['file_1'];
 			$code = htmlspecialchars($code);
+			// convert tabs into spaces
+			$code = tab2space($code);
 		
 			/* add line numbers to code */
 			$lines = explode("\n", $code);
@@ -243,6 +245,10 @@ if($_GET["user"] == '' ) {
 
 		$comm .= '<span class="com_date">'.$row['timeposted'].'</span>';
 		$comm .= '<span class="com_human">'.absHumanTiming($row['timeposted']).'</span></div>';
+
+		$row['txt'] = htmlspecialchars($row['txt']);
+		$row['txt'] = tab2space($row['txt']);
+
 		$comm .= '<div class="com_body"><pre>
 '.$row['txt'].'
 		</pre></div>
@@ -259,7 +265,7 @@ if($_GET["user"] == '' ) {
 }
 
 /* if root user get student name for this assignment to put on page */
-if($role == 0)
+if($role == 0 && isset($_GET["user"]))
 {
 	$sql = 'select name from users where user_id='.$_GET["user"];
 	

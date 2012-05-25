@@ -1,6 +1,7 @@
 <?php
 
 include_once("auth.php");
+include_once("time.php");
 
 if (!$_GET["file_id"])  { die("No File Name Sent"); }
 
@@ -19,6 +20,7 @@ $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 
 $row[0] = htmlspecialchars($row[0]);
+$row[0] = tab2space($row[0]);
 
 echo "<html><pre>".$row[0]."</pre></html>";
 
