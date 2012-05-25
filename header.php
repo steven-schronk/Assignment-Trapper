@@ -6,7 +6,7 @@ if($user_id != '') {
 
 		$menu = '<div class="menu">
 			<ul>
-        			<li><a href="index.php">Classes</a></li>
+        			<li><a href="classes.php">Classes</a></li>
 			        <li><a href="manage.php">Manage Accounts</a></li>
         			<li><a href="workflow.php">Workflows</a></li>
 				<li><a href="#" onClick="logout();">'.$_COOKIE["username"].'</a></li>
@@ -16,7 +16,8 @@ if($user_id != '') {
 		//$menu = '<a href="index.php">Classes</a> | <a href="manage.php">Manage Account</a> | '.$_COOKIE["username"].' | <a href="#" onClick="logout();">Logout</a>';
 		$menu = '<div class="menu">
 			<ul>
-        			<li><a href="index.php">Classes</a></li>
+        			<li><a href="classes.php">Classes</a></li>
+				<li><a href="index.php">Messages</a></li>
 			        <li><a href="manage.php">Manage Account</a></li>
 				<li><a href="#" onClick="logout();">'.$_COOKIE["username"].'</a></li>
 			</ul></div>';

@@ -271,17 +271,15 @@ if($_GET["user"] == '' ) {
 	}
 }
 
-/* if root user get student name for this assignment to put on page */
-if($role == 0 && isset($_GET["user"]))
-{
-	$sql = 'select name from users where user_id='.$_GET["user"];
+if(isset($_GET["user"])) {
+	$sql = 'select name, role from users where user_id='.$_GET["user"];
 	
 	$result = mysql_query($sql);
 
 	$row = mysql_fetch_row($result);
 
-	$student_user_name = $row[0];
-
+	if($role == 0) { $student_user_name = $row[0]; }
+	$user_id_role = $row[1];
 }
 
 /* determine if assignment is still open */
@@ -293,7 +291,7 @@ $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 
 if($row[0] == 1) { // assignment is open
-	if($role == 0 && $_GET["user"] == 1) {
+	if($role == 0 && $user_id_role == 0 && isset($_GET["user"])) {
 		$upload_form = '<div class="comment_box">Upload File:<form action="upload.php?sched='.$_GET["sched"].'" method="post" enctype="multipart/form-data">
 		<input type="file" name="file" size="40"><br><br>
 		<input name="user" type="hidden" value='.$_GET["user"].'>
