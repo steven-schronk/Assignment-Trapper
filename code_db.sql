@@ -121,9 +121,10 @@ CREATE TABLE users (
 	attempts int NOT NULL,				# number of bad attempts to login
 	role int NOT NULL,				# 0 is prof, 1 is student
 	first_login int NOT NULL,			# 0 is false, 1 is true
-	last_click timestamp,
+	last_click timestamp,				# for instant message user list
+	reset_hash varchar(40),				# used to reset a user password via email
 	PRIMARY KEY (user_id)
 );
 
 # initial root account with default password
-insert into users values ("", "steven.schronk@my.tccd.edu", "password", "Schronk, Steven", 0, 0, 1);
+insert into users values ("", "steven.schronk@my.tccd.edu", "password", "Schronk, Steven", 0, 0, 1,NOW(),"");
