@@ -1,5 +1,5 @@
 <?php
-
+ob_start("ob_gzhandler");
 include_once("conn.php");
 
 /* verify username and password - do not pass if incorrect */
@@ -46,6 +46,11 @@ $role = $row[2];
 $user_name = $row[3];
 $first_login = $row[4];
 $user_email = $row[5];
+
+/* update user status to indcate that this user is online - used mostly for chat features */
+$sql = "update users set last_click = NOW() where user_id = ".$user_id;
+
+$result = mysql_query($sql);
 
 /* if this is your first login, you MUST change password */
 if($first_login == 1) { include("password_change.php"); exit; }

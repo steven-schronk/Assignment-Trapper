@@ -39,7 +39,6 @@ if($comment_count == 0) {
 	$comment_time = absHumanTiming($comment_max);
 }
 
-
 $sql = 'select count(*), max(timeposted) from filecom';
 
 $result = mysql_query($sql);
@@ -52,7 +51,6 @@ if($filecomm_count == 0) {
 	$filecomm_max = $row[1];
 	$filecomm_time = absHumanTiming($filecomm_max);
 }
-
 
 $sql = 'select count(*), max(time_post) from files';
 
@@ -74,6 +72,21 @@ $sql = 'select count(*) from users where attempts > 100';
 $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $std_locked = $row[0];
+
+$sql = 'select max(chat_time) from chat';
+
+$result = mysql_query($sql);
+$row = mysql_fetch_row($result);
+$chat_max = $row[0];
+$chat_max_time = absHumanTiming($chat_max);
+
+$sql = 'select count(*) from chat';
+$result = mysql_query($sql);
+$row = mysql_fetch_row($result);
+$chat_count = $row[0];
+
+// number of chat messages by hour
+//$sql = 'select hour(chat_time) as chat_hour, count(*) from chat group by chat_hour order by chat_hour';
 
 			// ADIMINISTRATOR MENU
 ?>
@@ -113,7 +126,8 @@ $std_locked = $row[0];
 <div class="col">
 	<table class="gridtable">
 	<tr><th>Stat</th><th>Value</th><th>Human Time</th><th>Last Updated</th></tr>
-	<tr><td>Files:</td><td><?php echo $file_count; ?></td><td><?php echo $file_time; ?></td><td><?php echo $file_time; ?></td></tr>
+	<tr><td>Chat Messages:</td><td><?php echo $chat_count ?></td><td><?php echo $chat_max_time ?></td><td><?php echo $chat_max ?></td></tr>
+	<tr><td>Files:</td><td><?php echo $file_count; ?></td><td><?php echo $file_time; ?></td><td><?php echo $file_max; ?></td></tr>
 	<tr><td>File Comments:</td><td><?php echo $filecomm_count; ?></td><td><?php echo $filecomm_time; ?></td><td><?php echo $filecomm_max; ?></td></tr>
 	<tr><td>Comments:</td><td><?php echo $comment_count; ?></td><td><?php echo $comment_time; ?></td><td><?php echo $comment_max; ?></td></tr>
 	<tr><td>Assignments:</td><td><?php echo $assignment_count; ?></td><td><?php echo $assignment_time; ?></td><td><?php echo $assignment_max; ?></td></tr>

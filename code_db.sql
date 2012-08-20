@@ -105,6 +105,14 @@ CREATE TABLE files (
 	PRIMARY KEY (file_id)
 );
 
+CREATE TABLE chat (
+	chat_id int NOT NULL AUTO_INCREMENT,
+	user_id int NOT NULL,
+	content varchar(256) NOT NULL,
+	chat_time timestamp NOT NULL,
+	PRIMARY KEY(chat_id)
+);
+
 CREATE TABLE users (
 	user_id int NOT NULL AUTO_INCREMENT,		#
 	email varchar(128) NOT NULL,			# 
@@ -113,6 +121,7 @@ CREATE TABLE users (
 	attempts int NOT NULL,				# number of bad attempts to login
 	role int NOT NULL,				# 0 is prof, 1 is student
 	first_login int NOT NULL,			# 0 is false, 1 is true
+	last_click timestamp,
 	PRIMARY KEY (user_id)
 );
 

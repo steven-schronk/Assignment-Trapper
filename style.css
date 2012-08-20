@@ -62,32 +62,57 @@ table.gridtable td {
     border-color: #666666;
     background-color: #ffffff;
 }
-.menu {
-	/*background-color: #333;*/
+
+.login_menu {
+	position: relative;
+	float: right;
+	top: 0px;
+	right: 0px;
+	padding-right: 10px;
 }
 
-.menu ul {
+.logout_button {
+	background-color: #f00;
+	color: #fff;
+}
+
+.logout_button:hover {
+	background-color: #000;
+	color: #f00;
+}
+
+.main_menu {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: #ececec;
+	border-bottom: 2px solid #000;
+	width: 100%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.main_menu ul {
 	margin: 0;
 	padding: 0;
-	float: left;
 }
 
-.menu ul li {
+.main_menu ul li {
 	display: inline;
 }
 
-.menu ul li a {
+.main_menu ul li a {
 	float: left; 
 	text-decoration: none;
 	margin-left: 25px;
 }
 
-.menu ul li a:visited {
+.main_menu ul li a:visited {
 
 	text-decoration: none;
 }
 
-.menu ul li a:hover, .menu ul li .current {
+.main_menu ul li a:hover, .menu ul li .current {
     color: #000;
     border-bottom: 2px solid #000;
 }
@@ -120,12 +145,6 @@ table.gridtable td {
 }
 */
 
-
-.header {
-    position: absolute;
-    top: 5px;
-    right: 20px;
-}
 .highlight { background: #fff }
 .line_numbers {
     background-color: #ececec;

@@ -1,8 +1,32 @@
-cannot use "enter" key for login credentials form
 
-cannot recover password for students
+Cannot use "enter" key for login credentials form
+
+Users cannot recover password for themselves.
 
 Email for created or modified assignments
+
 Email for late assignments
+
 Email (to instructor) for comment from student
 
+Create management console that can look at all users's messages
+
+	Should include search to view only a particular user's chats.
+
+Allow users to see past chats anytime - everything is recorded
+
+Create private chat rooms between two people and a public room as well.
+
+Add sound for user entering chat and another for a user logging off.
+
+Create a message board for each assignment in system.
+
+Empty chat updates should not send any return at all - to reduce bandwidth.
+
+Noises made in chat are not what is needed.  Need a knock sound and a send and receive sound.
+
+Users in chat should have different color chats to make the messages more readable.
+
+Need a place for students and faculty to share code outside of assignments.
+
+Need logoff button instead of name to click on.
