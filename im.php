@@ -8,7 +8,7 @@ include_once("auth.php");
 <script type="text/javascript" src="ajax.js"></script>
 <script type="text/javascript" src="debugger.js"></script>
 <script>
-var last_chat_id = 0;
+var last_chat_id = -1;	// chat id of last chat message received
 var chat_div;
 var chat_json = new Object();
 var chat_ping = null;
@@ -34,6 +34,11 @@ function parse_message_response(){
 		last_chat_id = chat_json.m[i].id;
 	}
 	document.getElementById("chat_window").innerHTML += message_text;
+}
+
+function parse_first_resonse(){
+	last_chat_id = chat_json.m[0].id;
+	getChat("im_chat_update.php?id="+last_chat_id, "chat_window");
 }
 
 function update_ping(){
@@ -73,7 +78,11 @@ function getChat(url, pageElement){
         case "200" :
           window.status = "Page Loaded Sucessfully";
 		  chat_json = JSON.parse(ajaxRequest.response);
-		  parse_message_response();
+			if(last_chat_id == -1) {
+				parse_first_resonse();
+			} else {
+		  		parse_message_response();
+			}
           debugEvent(url, "got", ajaxRequest.responseText, t_diff);
           break;
         case "403" :
@@ -117,7 +126,7 @@ function start_updates(){
 	click_sound.src = 'sfx/click.wav';
 	document.getElementById('message').focus();
 	chat_div = document.getElementById("chat_window");
-	getChat( "im_chat_update.php?id=-1", "chat_window");
+	getChat("im_chat_update.php?id=-1", "chat_window");
 	setInterval(update_chat_messages, 2000);
 	update_users_online();
 	setInterval(update_users_online, 15000);
