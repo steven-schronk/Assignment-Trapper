@@ -55,7 +55,7 @@ while($row = mysql_fetch_array($result))
 
 		if($row['help_me']) { $html .= '<img src=gfx/flag_red.png>'; } else { $html .= '<img src=gfx/flag_white.png>'; }
 
-		$html .= $help_icon;
+		//$html .= $help_icon;
 
 		if($row['late']) {
 			$html .= '<img src=gfx/tick_off.png></td>';
@@ -88,7 +88,7 @@ while($row = mysql_fetch_array($result))
 
 		if($row['help_me']) { $html .= '<img src=gfx/flag_red.png>'; } else { $html .= '<img src=gfx/flag_white.png>'; }
 
-		$html .= $help_icon;
+		//$html .= $help_icon;
 
 		if($row['late']) {
 			$html .= '<img src=gfx/tick_off.png></td>';

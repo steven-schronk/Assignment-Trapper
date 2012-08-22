@@ -1,4 +1,7 @@
 <?php
+
+date_default_timezone_set('America/Chicago');
+
 ob_start("ob_gzhandler");
 include_once("conn.php");
 

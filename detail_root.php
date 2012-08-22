@@ -5,6 +5,18 @@ include_once("header.php");
 include_once("time.php");
 include_once("user_details.php");
 
+$file_count = "";
+$files = "";
+$comm = "";
+$student_list = "";
+$help_icon = "";
+$user = "";
+$user_id_role = "";
+$user_data_sent = "";
+$student_user_name = "";
+$comment_form = "";
+
+
 function taunt_user()
 {
 	$taunt[0] = "No Soup For You";
@@ -32,13 +44,13 @@ if (!$_GET["sched"]) { die("No Assignment Requested"); }
 
 if(isset($_GET["user"])) { $user_data_sent = true; }
 
-$_GET["sched"] = mysql_real_escape_string($_GET["sched"]);
-$_GET["user"] = mysql_real_escape_string($_GET["user"]);
+if(isset($_GET["sched"])) { $_GET["sched"] = mysql_real_escape_string($_GET["sched"]); }
+if(isset($_GET["user"] )) { $_GET["user"] = mysql_real_escape_string($_GET["user"]); }
 
 /* get help status for this assignment */
 if($role == 0) {
 
-	if($_GET["user"]) { 
+	if(isset($_GET["user"])) { 
 		$sql = 'select help_me from sched_details where sched_id ='.$_GET["sched"].' and user_id = '.$_GET["user"];
 
 		$result = mysql_query($sql);
@@ -149,7 +161,7 @@ $row = mysql_fetch_array($result);
 
 $breadcrumb = '<a href=assignment.php?class='.$row['class_id'].'>'.$row['class_name'].'</a>&nbsp;';
 
-if($_GET["user"] == '' ) { 
+if($_GET["user"] == '' ) {
 	/* get class id for this schedule id */
 
 	$sql = 'select class_id from schedule where sched_id='.$_GET["sched"];
@@ -220,7 +232,7 @@ if($_GET["user"] == '' ) {
 
 		// get all comments for this particular file
 		//$sql = "select filecom_id, file_id, line_no, user_id, txt, timeposted from filecom where file_id=".$row[0]." order by line_no, timeposted";
-		$sql = 'select line_no, filecom.user_id, name,  timeposted, txt, role from filecom, users 
+		$sql = 'select line_no, filecom.user_id, name, timeposted, txt, role from filecom, users 
 			where (users.user_id = filecom.user_id) and file_id='.$row[1].' order by line_no, timeposted';
 
 		//echo $sql;
@@ -231,7 +243,7 @@ if($_GET["user"] == '' ) {
 		// only get first line comment
 		$filecoms = mysql_fetch_array($filecom);
 
-		$code = $row[5];
+		if(isset($row[5])) { $code = $row[5]; }
 
 		// get file contents and details for each file
 		$sql = 'select file_id, time_post, file_name, file_size, time_post, file_1 from files where file_id ='.$row[1];

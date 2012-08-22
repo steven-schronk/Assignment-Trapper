@@ -1,6 +1,11 @@
 <?php
 
+date_default_timezone_set('America/Chicago');
+
 include_once("auth_root.php");
+
+$items = "";
+
 //include_once("conn.php");
 
 /* TODO: Lock out account if this user keeps hitting this page. */

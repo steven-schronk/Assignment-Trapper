@@ -13,7 +13,7 @@ $_GET["file_id"] = mysql_real_escape_string($_GET["file_id"]);
 $_GET["line_num"] = mysql_real_escape_string($_GET["line_num"]);
 
 // comments are being sent with double quotes on each end... remove them
-$comment = substr($_GET[comment], 1, -1);
+$comment = substr($_GET["comment"], 1, -1);
 
 $comment = mysql_real_escape_string($comment);
 
