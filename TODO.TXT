@@ -1,3 +1,6 @@
+Make new homepage with news items and links
+
+Breadcrumbs on all pages
 
 Cannot use "enter" key for login credentials form
 

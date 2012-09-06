@@ -85,6 +85,18 @@ $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
 $chat_count = $row[0];
 
+$sql = 'select count(*) from discussion_post';
+$result = mysql_query($sql);
+$row = mysql_fetch_row($result);
+$discussion_count = $row[0];
+
+$sql = 'select max(post_time) from discussion_post;';
+$result = mysql_query($sql);
+$row = mysql_fetch_row($result);
+$discussion_max = $row[0];
+$discussion_max_time = absHumanTiming($discussion_max);
+
+
 // number of chat messages by hour
 //$sql = 'select hour(chat_time) as chat_hour, count(*) from chat group by chat_hour order by chat_hour';
 
@@ -116,6 +128,7 @@ $chat_count = $row[0];
 		<tr><td></td><td><a href="index.php">Comments From Students</a></td></tr>
 		<tr><td></td><td><a href="workflow_comments.php">Most Recent Comments</a></td></tr>
 		<tr><td></td><td><a href="workflow_ungraded.php">Assignments Ready For Grading</a></td></tr>
+		<tr><td></td><td><a href="workflow_discussion.php">Most Recent Discussion Postings</a></td></tr>
 	</table>
 	<br><br>
 	<table>
@@ -126,6 +139,7 @@ $chat_count = $row[0];
 <div class="col">
 	<table class="gridtable">
 	<tr><th>Stat</th><th>Value</th><th>Human Time</th><th>Last Updated</th></tr>
+	<tr><td>Discussion Messages:</td><td><?php echo $discussion_count ?></td><td><?php echo $discussion_max_time ?></td><td><?php echo $discussion_max ?></td></tr>
 	<tr><td>Chat Messages:</td><td><?php echo $chat_count ?></td><td><?php echo $chat_max_time ?></td><td><?php echo $chat_max ?></td></tr>
 	<tr><td>Files:</td><td><?php echo $file_count; ?></td><td><?php echo $file_time; ?></td><td><?php echo $file_max; ?></td></tr>
 	<tr><td>File Comments:</td><td><?php echo $filecomm_count; ?></td><td><?php echo $filecomm_time; ?></td><td><?php echo $filecomm_max; ?></td></tr>

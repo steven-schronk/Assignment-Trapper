@@ -196,6 +196,11 @@ table.gridtable td {
     left: 300px;
     padding-top: 7px;
 }
+.com_link {
+	position: absolute;
+    left: 700px;
+    padding-top: 7px;
+}
 .comment_username {
     position: relative;
     right: 100px;
@@ -353,4 +358,8 @@ table.gridtable td {
     color: #faa;
     font-weight:bold;
     font-size: 65px;
+}
+.topictitle {
+	font-size: 20px;
+	font-weight:bold;
 }

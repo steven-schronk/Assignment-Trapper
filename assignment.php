@@ -23,7 +23,6 @@ $row = mysql_fetch_array($result);
 
 $breadcrumb =  '<a href=assignment.php?class='.$row['class_id'].'>'.$row['class_name'].'</a>&nbsp;';
 
-
 /* get list of assignments */
 $html = "";
 
@@ -45,14 +44,12 @@ $result = mysql_query($sql);
 //echo $sql;
 
 if (!$result) { die("SQL ERROR"); }
-while($row = mysql_fetch_row($result))
-{
-	$html .= '<tr><td>'.$row[7].'</td>';
-	//$html .= '<tr><td>'.$row[10].'</td>';
+while($row = mysql_fetch_row($result)){
+	$html .= "\n<tr><td>".$row[7]."</td>";
 
 	// assignment started?
 	if($row[10] < 0){
-		$html .= "<td><img src=gfx/bullet_black.png>"; 
+		$html .= "<td><img src=gfx/bullet_black.png>";
 		$started = false;
 	} else {
 		// assignment open?
@@ -70,13 +67,15 @@ while($row = mysql_fetch_row($result))
 		} else { $html .= '<img src=gfx/flag_white.png>'; }
 
 		if(assignment_late($user_id, $row[7])) {
-			$html .= '<img src=gfx/tick_off.png></td>';
+			$html .= '<img src=gfx/tick_off.png>';
 		} else {
 			if(file_count($user_id, $row[7])) {
-				$html .= '<img src=gfx/star.png></td>';
-			} else { $html .= '<img src=gfx/error.png></td>'; }
+				$html .= '<img src=gfx/star.png>';
+			} else { $html .= '<img src=gfx/error.png>'; }
 		}
 	}
+
+	$html .= '<a href="discussion.php?sched='.$row[7].'"><img src="./gfx/comments_small.png"></a></td>';
 
 	if($role == 0 ) {
 		$html .= '<td><a href="detail_root.php?sched='.$row[7].'">'.$row[2].'</a></td><td>'.$row[9].'</td><td>'.$row[0].'</td>';

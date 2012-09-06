@@ -85,23 +85,25 @@ if($role == 0) {
 if($role == 0 ) {
 	if($user_sent) {
 		if(assignment_late($_GET["user"], $_GET["sched"])) {
-			$file_count .= '<img src=gfx/tick_off.png></td>';
+			$file_count .= '<img src=gfx/tick_off.png>';
 		} else {
 			if(file_count($_GET["user"], $_GET["sched"])) {
-				$file_count .= '<img src=gfx/star.png></td>';
-			} else { $file_count .= '<img src=gfx/error.png></td>'; }
+				$file_count .= '<img src=gfx/star.png>';
+			} else { $file_count .= '<img src=gfx/error.png>'; }
 		}
 	}
 
 } else {
 	if(assignment_late($user_id, $_GET["sched"])) {
-		$file_count .= '<img src=gfx/tick_off.png></td>';
+		$file_count .= '<img src=gfx/tick_off.png>';
 	} else {
 		if(file_count($user_id, $_GET["sched"])) {
-			$file_count .= '<img src=gfx/star.png></td>';
-		} else { $file_count .= '<img src=gfx/error.png></td>'; }
+			$file_count .= '<img src=gfx/star.png>';
+		} else { $file_count .= '<img src=gfx/error.png>'; }
 	}
 }
+
+$discussion .= '<a href="discussion.php?sched='.$_GET["sched"].'"><img src="./gfx/comments_small.png"></a></td>';
 
 /* get assignment details */
 $html = "";
@@ -134,7 +136,8 @@ while($row = mysql_fetch_array($result))
 	if($row['graded']) { $html .= "<img src=gfx/bullet_disk.png>"; } else { $html .= "<img src=gfx/bullet_wrench.png>"; }
 
 	$html .= $help_icon;
-	$html .= $file_count."</td>";
+	$html .= $file_count;
+	$html .= $discussion;
 	$html .= '<td><a href="detail_root.php?sched='.$row['sched_id'].'">'.$row['title'].'</a></td><td>'.$row['type_name'].'</td><td>'.$row['chapter'].'</td>';
 	$html .= '<td>'.$row['section_id'].'</td><td>'.$row['ava_date'].'</td><td>'.$row['due_date'].'</td>';
 

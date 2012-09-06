@@ -58,12 +58,14 @@ while($row = mysql_fetch_array($result))
 		//$html .= $help_icon;
 
 		if($row['late']) {
-			$html .= '<img src=gfx/tick_off.png></td>';
+			$html .= '<img src=gfx/tick_off.png>';
 		} else {
 			if(file_count($row['user_id'], $row['sched_id'])) {
-				$html .= '<img src=gfx/star.png></td>';
-				} else { $html .= '<img src=gfx/error.png></td>'; }
+				$html .= '<img src=gfx/star.png>';
+				} else { $html .= '<img src=gfx/error.png>'; }
 		}
+
+		$html .= '<a href="discussion.php?sched='.$row['sched_id'].'"><img src="./gfx/comments_small.png"></a></td>';
 
 		$html .= '<td>'.$row['name'].'</td>';
 
@@ -91,12 +93,14 @@ while($row = mysql_fetch_array($result))
 		//$html .= $help_icon;
 
 		if($row['late']) {
-			$html .= '<img src=gfx/tick_off.png></td>';
+			$html .= '<img src=gfx/tick_off.png>';
 		} else {
 			if(file_count($user_id, $row['sched_id'])) {
-				$html .= '<img src=gfx/star.png></td>';
-				} else { $html .= '<img src=gfx/error.png></td>'; }
+				$html .= '<img src=gfx/star.png>';
+				} else { $html .= '<img src=gfx/error.png>'; }
 		}
+
+		$html .= '<a href="discussion.php?sched='.$row['sched_id'].'"><img src="./gfx/comments_small.png"></a></td>';
 
 		$html .= '<td><a href="detail_root.php?sched='.$row['sched_id'].'">'.$row['title'].'</a></td><td>'.$row['type_name'].'</td><td>'.$row['chapter'].'</td>';
 

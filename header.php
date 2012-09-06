@@ -10,22 +10,22 @@ if($user_id != '') {
 	if($role == 0) {
 		$menu = '<ul>
 				<li><a href="javascript:void(0);" target="_blank" onClick="window.open(\'im.php\', \'Chat Room\', \'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=700,height=400,left = 310,top = 275\');">Chat</a></li>
-				<li><a href=#>Chat Log</a>
+				<!--<li><a href=#>Chat Log</a>-->
         		<li><a href="classes.php">Classes</a></li>
-				<li><a href="#">Discussion Board</a></li>
+				<li><a href="discussion_board.php">Discussion Board</a></li>
 				<li><a href="index.php">Messages</a></li>
 			    <li><a href="manage.php">Manage Accounts</a></li>
-				<li><a href="#">Search</a></li>
+				<!--<li><a href="#">Search</a></li>-->
 			</ul><div class="login_menu">'.$_COOKIE["username"].'&nbsp;&nbsp;&nbsp;&nbsp;<button class="logout_button" onClick="logout();">Logout</button></div>';
 	} else {
 		$menu = '<ul>
 				<li><a href="javascript:void(0);" target="_blank" onClick="window.open(\'im.php\', \'Chat Room\', \'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=700,height=400,left = 310,top = 275\');">Chat</a></li>
-				<li><a href=#>Chat Log</a>
+				<!--<li><a href=#>Chat Log</a>-->
         		<li><a href="classes.php">Classes</a></li>
-				<li><a href="#">Discussion Board</a></li>
+				<li><a href="discussion_board.php">Discussion Board</a></li>
 				<li><a href="index.php">Messages</a></li>
 			    <li><a href="manage.php">Manage Account</a></li>
-				<li><a href="#">Search</a></li>
+				<!--<li><a href="#">Search</a></li>-->
 			</ul><div class="login_menu">'.$_COOKIE["username"].'&nbsp;&nbsp;&nbsp;&nbsp;<button class="logout_button" onClick="logout();">Logout</button></div>';
 	}
 } else {

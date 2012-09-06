@@ -4,8 +4,8 @@
 #
 # mysql -u root -p < create_db.sql
 
-CREATE DATABASE trapper;
-USE trapper;
+CREATE DATABASE trapper2;
+USE trapper2;
 
 CREATE TABLE filecom (
 	filecom_id int NOT NULL AUTO_INCREMENT,
@@ -77,12 +77,16 @@ CREATE TABLE class (
 	PRIMARY KEY (class_id)
 );
 
+insert into class values ("", "Test Class", "101", "RM 205", "Schronk,Steven");
+
 CREATE TABLE enrollment (
 	enrollment_id int NOT NULL AUTO_INCREMENT,
 	class_id int NOT NULL,
 	user_id int NOT NULL,
 	PRIMARY KEY (enrollment_id)
 );
+
+insert into enrollment values ("", "0", "1");
 
 /*
 CREATE TABLE sub (
@@ -113,6 +117,48 @@ CREATE TABLE chat (
 	PRIMARY KEY(chat_id)
 );
 
+CREATE TABLE discussion_topic (
+	topic_id int NOT NULL AUTO_INCREMENT,
+	topic_name varchar(128),
+	topic_description varchar(256),
+	discussion_sticky int NOT NULL,				# 1 if sticky 0 if not
+	topic_time timestamp NOT NULL,
+	PRIMARY KEY(topic_id)
+);
+
+insert into discussion_topic values("", "Class Suggestions", "Make suggestions for new classes or complain about what is wrong with the current classes.", "1", NOW());
+insert into discussion_topic values("", "Site Suggestions", "Conversation about how to make this website better.", "1", NOW());
+insert into discussion_topic values("", "Technical Support", "Obtaining general technical support about using the site.", "1", NOW());
+insert into discussion_topic values("", "Talk About Anything", "Talk about whatever you like here.", "0", NOW());
+
+CREATE TABLE discussion_post (
+	post_id int NOT NULL AUTO_INCREMENT,
+	user_id int NOT NULL,					# no anonymous users
+	topic_id int,							# if no topic set, goes with assignment
+	sched_id int,
+	post_content text,
+	post_time timestamp NOT NULL,
+	PRIMARY KEY(post_id)
+);
+
+insert into discussion_post values ("", "1", "1", "", "Please help.", now());
+insert into discussion_post values ("", "1", "1", "", "Need help with email.", now());
+insert into discussion_post values ("", "1", "3", "", "Could we have more discussions?", now());
+insert into discussion_post values ("", "1", "2", "", "Lets tlk about anything here", now());
+
+
+
+
+CREATE TABLE news (
+	news_id int NOT NULL AUTO_INCREMENT,
+	user_id int NOT NULL,					# no anonymous news
+	news text,
+	news_open DATETIME NOT NULL,			# news appears for users
+	news_close DATETIME NOT NULL,			# news no longer on front page for users
+	news_update_time timestamp NOT NULL,	# timestamp for updates
+	PRIMARY KEY(news_id)
+);
+
 CREATE TABLE users (
 	user_id int NOT NULL AUTO_INCREMENT,		#
 	email varchar(128) NOT NULL,			# 
@@ -127,4 +173,4 @@ CREATE TABLE users (
 );
 
 # initial root account with default password
-insert into users values ("", "steven.schronk@my.tccd.edu", "password", "Schronk, Steven", 0, 0, 1,NOW(),"");
+insert into users values ("", "steven.schronk@my.tccd.edu", sha1("password"), "Schronk, Steven", 0, 0, 1,NOW(),"");
